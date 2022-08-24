@@ -1,0 +1,13 @@
+﻿@page "/photos"
+
+<h3>Photo</h3>
+<MudButton OnClick="Test">Click</MudButton>
+
+@code {
+
+    private async Task Test()
+    {
+        await PhotoService.GetPhotos();
+        Console.WriteLine(PhotoService.Photos.TotalResults);
+    }
+}
