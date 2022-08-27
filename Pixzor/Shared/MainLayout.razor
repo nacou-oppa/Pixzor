@@ -1,34 +1,88 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
+<MudThemeProvider Theme="_theme" IsDarkMode="_isDarkMode" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<MudLayout>
+<MudLayout Class="d-flex flex-column">
     <MudAppBar Elevation="0">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudSpacer />
-        <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Link="https://mudblazor.com/" Target="_blank" />
-        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/MudBlazor/MudBlazor/" Target="_blank" />
-    </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
-        <MudDrawerHeader>
+        
+        <!-- Hidden on Xs-->
+        <MudHidden Breakpoint="Breakpoint.Xs">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Default" Edge="Edge.Start" OnClick="@((e) => DrawerToggle(Anchor.Left))" />
             <MudText Typo="Typo.h6">Pixzor</MudText>
-        </MudDrawerHeader>
-        <NavMenu />
-    </MudDrawer>
+            <MudSpacer />
+            <MudText Typo="Typo.h6" >Home</MudText>
+            <MudText Typo="Typo.h6">About Me</MudText>
+            <MudSpacer />
+            <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" 
+                           Link="https://github.com/anhnq-git/Pixzor" Target="_blank" />
+        </MudHidden>
+
+        <!-- Hidden on Sm and up-->
+        <MudHidden Breakpoint="Breakpoint.SmAndUp">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Default" Edge="Edge.Start" OnClick="@((e) => DrawerToggle(Anchor.Top))" />
+            <MudText Class="mx-auto" Typo="Typo.h6">Pixzor</MudText>
+            <MudIconButton Disabled="true" Icon="" Color="Color.Default" Edge="Edge.Start" OnClick="@((e) => DrawerToggle(Anchor.Top))" Style="width: 48px;" />
+        </MudHidden>
+
+    </MudAppBar>
+    
+    <!-- Hidden on Xs-->
+    <MudHidden Breakpoint="Breakpoint.Xs">
+        <MudDrawer @bind-Open="_drawer" Anchor="drawerAnchor" ClipMode="DrawerClipMode.Always" Variant="DrawerVariant.Persistent" Elevation="1">
+            <NavMenu />
+        </MudDrawer>
+    </MudHidden>
+
+    <!-- Hidden on Sm and up-->
+    <MudHidden Breakpoint="Breakpoint.SmAndUp">
+        <MudDrawer @bind-Open="_drawer" Anchor="drawerAnchor" ClipMode="DrawerClipMode.Never" Variant="DrawerVariant.Temporary" Elevation="1">
+            <MudDrawerHeader>
+                <MudText Typo="Typo.h6">Pixzor</MudText>
+            </MudDrawerHeader>
+            <NavMenu />
+        </MudDrawer>
+    </MudHidden>
     <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Large" Class="my-16 pt-16">
+        <MudContainer Class="ma-0 pa-0" MaxWidth="MaxWidth.False">
             @Body
         </MudContainer>
     </MudMainContent>
+    <footer>
+        This is a footer
+    </footer>
 </MudLayout>
 
 @code {
-    bool _drawerOpen = true;
+    // MudTheme
+    private bool _isDarkMode = false;
+    MudTheme _theme = new()
+        {
+            Palette = new()
+            {
+                Primary = "#E3655B",
+                PrimaryLighten = "#E27C78",
+                PrimaryDarken = "#CE5C53",
+                Secondary = "#858AE3",
+                Tertiary = "#684551",
+                Black = "#2A2D43",
+                White = "#EFF1F3",
+                Surface = "#EFF1F3",
+                Background = "#EFF1F3",
+                DrawerBackground = "#EFF1F3",
+                AppbarBackground = "#E3655B",
+                ActionDefault = "#fff",
+            }
+    };
 
-    void DrawerToggle()
+    // MudDrawer
+    bool _drawer;
+    Anchor drawerAnchor;
+
+    void DrawerToggle(Anchor anchor)
     {
-        _drawerOpen = !_drawerOpen;
+        _drawer = !_drawer;
+        drawerAnchor = anchor;
     }
 }

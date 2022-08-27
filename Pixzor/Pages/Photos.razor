@@ -1,9 +1,49 @@
 ﻿@page "/photos"
 
-<h3>Photo</h3>
+<style>
+    .home-search {
+        position: relative;
+    }
+
+    .mud-input-control {
+        width: 60%;
+    }
+</style>
+
+<PageTitle>Home</PageTitle>
+
+<MudContainer Class="ma-0 pa-0" MaxWidth="MaxWidth.False">
+    <div class="home-search">
+        <MudImage Src="https://images.pexels.com/photos/376533/pexels-photo-376533.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                  Fluid="true"
+                  ObjectFit="ObjectFit.Cover"
+                  Style="height: 50vh; width: 100%"
+                  />
+        <MudContainer Class="d-flex flex-column" Style="position: absolute; top: 40%; left: 0; align-items: center;">
+            <MudText Style="color: #fff">Pixzor Home Page</MudText>
+            <MudTextField DebounceInterval="500" 
+                            OnDebounceIntervalElapsed="HandleIntervalElapsed" 
+                            @bind-Value="@_debouncedText" 
+                            Label="Debounced" 
+                            Variant="Variant.Filled" 
+                            Adornment="Adornment.End" 
+                            AdornmentIcon="@Icons.Filled.Search"
+                            Style="background-color: white;" />
+        </MudContainer>
+    </div>
+</MudContainer>
+
 <MudButton OnClick="Test">Click</MudButton>
 
 @code {
+
+    // Search
+    string _debouncedText = string.Empty;
+
+    void HandleIntervalElapsed(string debouncedText)
+    {
+        // at this stage, interval has elapsed
+    }
 
     private async Task Test()
     {
