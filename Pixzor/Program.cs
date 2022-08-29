@@ -1,8 +1,9 @@
-global using Pixzor.Resources;
-global using System.Net.Http.Json;
-global using System.Net.Http.Headers;
 global using Pixzor.Models;
+global using Pixzor.Resources;
 global using Pixzor.Services;
+
+global using System.Net.Http.Headers;
+global using System.Net.Http.Json;
 global using System.Text.Json.Serialization;
 
 using Microsoft.AspNetCore.Components.Web;

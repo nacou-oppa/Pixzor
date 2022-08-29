@@ -17,9 +17,10 @@
             return photo;
         }
 
-        public async Task GetPhotos(int page = 1, int perPage = 15)
+        public async Task<PhotoPage> GetPhotos(int page = 1, int perPage = 15)
         {
-            Photos = await _httpClient.GetFromJsonAsync<PhotoPage>($"curated?page={page}&per_page={perPage}");
+            var photoPage = await _httpClient.GetFromJsonAsync<PhotoPage>($"curated?page={page}&per_page={perPage}");
+            return photoPage;
         }
 
         public async Task<PhotoPage> SearchPhoto(string query, string orientation = "", string size = "", string color = "", string local = "", int page = 1, int perPage = 15)

@@ -6,7 +6,7 @@
 
         Task<Photo> GetPhoto(int id);
 
-        Task GetPhotos(int page = 1, int perPage = 15);
+        Task<PhotoPage> GetPhotos(int page = 1, int perPage = 15);
 
         Task<PhotoPage> SearchPhoto(string query, string orientation = "", string size = "", string color = "", string local = "", int page = 1, int perPage = 15);
     }

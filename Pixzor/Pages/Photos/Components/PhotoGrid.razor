@@ -1,0 +1,11 @@
+﻿<MudPaper Class="d-flex" Style="height: fit-content">
+    <MudImage Src="@(Src.Large)"
+              Fluid="true"
+              ObjectFit="ObjectFit.Contain"
+              Style="width: 100%; height: auto;" />
+</MudPaper>
+
+@code {
+    [Parameter]
+    public Source Src { get; set; }
+}

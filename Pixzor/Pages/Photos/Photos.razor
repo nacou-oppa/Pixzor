@@ -1,0 +1,147 @@
+﻿@page "/"
+
+<style>
+    .home-search {
+        display: flex;
+        position: relative;
+    }
+
+    .mud-input-control {
+        width: 60%;
+    }
+
+    /* MudGrid */
+    .mud-grid-spacing-xs-3 {
+     width: 100%; 
+     margin: 0; 
+}
+
+    @@media (max-width: 768px) {
+        .photo-container {
+            padding: 0 12px !important;
+        }
+    }
+</style>
+
+<PageTitle>Home</PageTitle>
+
+<MudContainer Class="d-flex flex-column ma-0 pa-0" MaxWidth="MaxWidth.False">
+    <MudContainer Class="home-search" MaxWidth="MaxWidth.False">
+        <MudImage Src="https://images.pexels.com/photos/1083822/pexels-photo-1083822.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                  Fluid="true"
+                  ObjectFit="ObjectFit.Cover"
+                  Style="height: 50vh; width: 100%"
+                  />
+        <MudContainer Class="d-flex flex-column gap-5" 
+                      Style="position: absolute; top: 30%; left: 0; align-items: center;" 
+                      MaxWidth="MaxWidth.False">
+            <MudText Style="color: #fff" Typo="Typo.h4"><b><span style="color: #E3655B;">Pixzor</span> Home Page</b></MudText>
+            <MudAutocomplete DebounceInterval="500"
+                          Class="rounded"
+
+                          OnDebounceIntervalElapsed="HandleIntervalElapsed" 
+                          @bind-Value="@_debouncedText"
+                          SearchFunc="SearchPhotos"
+                          Label="Search" 
+                          Variant="Variant.Filled" 
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@Icons.Filled.Search"
+                          AdornmentColor="Color.Primary"
+                          Style="background-color: white;" />
+        </MudContainer>
+    </MudContainer>
+    <MudContainer Class="photo-container" MaxWidth="MaxWidth.False" Style="align-self: center; padding: 0 40px; margin-top: 30px;">
+        <MudTabs Elevation="0" Rounded="true" ApplyEffectsToContainer="true" PanelClass="py-6" Centered="true" Color="Color.Surface">
+            <MudTabPanel Text="Tab One" Style="padding: 0;">
+                <MudGrid Class="d-flex flex-nowrap gap-4">
+
+                    <!-- Hidden at sm and down -->
+                    <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                        <MudItem Class="pa-0" md="4">
+                            <MudStack Spacing="4">
+                            @*<Virtualize ItemsProvider="GetCuratedPhotos" Context="photo">*@
+                                @if(photoPage.per_page > 0)
+                                {
+                                    @foreach (var photo in photoPage.Photos.Take(80 / 3))
+                                    {
+                                        <PhotoGrid Src="@photo.Src" />   
+                                    }
+                                }
+                            @*</Virtualize>*@
+                            </MudStack>
+                        </MudItem>
+                        <MudItem Class="pa-0" md="4">
+                            <MudStack Spacing="4">
+
+                            @if (photoPage.per_page > 0)
+                            {
+                                @foreach (var photo in photoPage.Photos.Skip(80 / 3).Take((80 - 80 / 3) / 2))
+                                {
+                                    <PhotoGrid Src="@photo.Src" />
+                                }
+                            }
+                            </MudStack>
+                        </MudItem>
+                        <MudItem Class="pa-0" md="4">
+                            <MudStack Spacing="4">
+                            @if (photoPage.per_page > 0)
+                            {
+                                @foreach (var photo in photoPage.Photos.TakeLast((80 - 80 / 3) / 2))
+                                {
+                                    <PhotoGrid Src="@photo.Src" />
+                                }
+                            }
+                            </MudStack>
+                        </MudItem>
+                    </MudHidden>
+                </MudGrid>
+            </MudTabPanel>
+            <MudTabPanel Text="Tab Two">
+                <MudText>@Test</MudText>
+            </MudTabPanel>
+            <MudTabPanel Text="Tab Three">
+                <MudText>Content Three</MudText>
+            </MudTabPanel>
+        </MudTabs>
+    </MudContainer>
+</MudContainer>
+
+<MudButton>Click</MudButton>
+
+@code {
+    //public EventCallback<Photo> OnScroll { get; set; }
+    //public int totalPhotos { get; set; }
+
+    public PhotoPage photoPage { get; set; } = new();
+    public int Test { get; set; } = 80 / 3;  
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCuratedPhotos();
+    }
+
+    private async Task LoadCuratedPhotos()
+    {
+        photoPage = await PhotoService.GetPhotos(1, 80);
+    }
+
+    // Search
+    string _debouncedText = string.Empty;
+
+    void HandleIntervalElapsed(string debouncedText)
+    {
+        // at this stage, interval has elapsed
+    }
+
+
+    //private ValueTask<ItemsProviderResult<Photo>> LoadPhotos(ItemsProviderRequest request)
+    //{
+    //    var numPhotos = Math.Min(request.Count, totalPhotos - request.StartIndex);
+        
+    //}
+
+    private void SearchPhotos()
+    {
+
+    }
+}
