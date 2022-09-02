@@ -6,7 +6,8 @@
         position: relative;
     }
 
-    .mud-input-control {
+    .mud-autocomplete {
+        display: flex;
         width: 60%;
     }
 
@@ -36,18 +37,32 @@
                       Style="position: absolute; top: 30%; left: 0; align-items: center;" 
                       MaxWidth="MaxWidth.False">
             <MudText Style="color: #fff" Typo="Typo.h4"><b><span style="color: #E3655B;">Pixzor</span> Home Page</b></MudText>
-            <MudAutocomplete DebounceInterval="500"
-                          Class="rounded"
+            <MudAutocomplete Class="rounded"
+                             T="string"
+                             @bind-Value="@searchText"
+                             SearchFunc="SearchPhotos"
+                             OnAdornmentClick="@((e) => Console.WriteLine(e.Button))"
+                             Label="Search" 
+                             ResetValueOnEmptyText="true"
+                             Variant="Variant.Filled" 
+                             Adornment="Adornment.End"
+                             AdornmentIcon="@Icons.Filled.Search"
+                             AdornmentColor="Color.Primary"
+                             Style="background-color: white;">
+            
+                <MoreItemsTemplate>
+                    <MudText Align="Align.Center" Class="px-4 py-1">
+                        Only the first 10 items are shown
+                    </MudText>
+                </MoreItemsTemplate>
 
-                          OnDebounceIntervalElapsed="HandleIntervalElapsed" 
-                          @bind-Value="@_debouncedText"
-                          SearchFunc="SearchPhotos"
-                          Label="Search" 
-                          Variant="Variant.Filled" 
-                          Adornment="Adornment.End"
-                          AdornmentIcon="@Icons.Filled.Search"
-                          AdornmentColor="Color.Primary"
-                          Style="background-color: white;" />
+                <NoItemsTemplate>
+                    <MudText Align="Align.Center" Class="px-4 py-1">
+                        No items found
+                    </MudText>
+                </NoItemsTemplate>
+
+            </MudAutocomplete>
         </MudContainer>
     </MudContainer>
     <MudContainer Class="photo-container" MaxWidth="MaxWidth.False" Style="align-self: center; padding: 0 40px; margin-top: 30px;">
@@ -97,7 +112,7 @@
                 </MudGrid>
             </MudTabPanel>
             <MudTabPanel Text="Tab Two">
-                <MudText>@Test</MudText>
+                <MudText></MudText>
             </MudTabPanel>
             <MudTabPanel Text="Tab Three">
                 <MudText>Content Three</MudText>
@@ -112,8 +127,25 @@
     //public EventCallback<Photo> OnScroll { get; set; }
     //public int totalPhotos { get; set; }
 
+    private string[] states =
+    {
+        "Alabama", "Alaska", "American Samoa", "Arizona",
+        "Arkansas", "California", "Colorado", "Connecticut",
+        "Delaware", "District of Columbia", "Federated States of Micronesia",
+        "Florida", "Georgia", "Guam", "Hawaii", "Idaho",
+        "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
+        "Louisiana", "Maine", "Marshall Islands", "Maryland",
+        "Massachusetts", "Michigan", "Minnesota", "Mississippi",
+        "Missouri", "Montana", "Nebraska", "Nevada",
+        "New Hampshire", "New Jersey", "New Mexico", "New York",
+        "North Carolina", "North Dakota", "Northern Mariana Islands", "Ohio",
+        "Oklahoma", "Oregon", "Palau", "Pennsylvania", "Puerto Rico",
+        "Rhode Island", "South Carolina", "South Dakota", "Tennessee",
+        "Texas", "Utah", "Vermont", "Virgin Island", "Virginia",
+        "Washington", "West Virginia", "Wisconsin", "Wyoming",
+    };
+
     public PhotoPage photoPage { get; set; } = new();
-    public int Test { get; set; } = 80 / 3;  
     
     protected override async Task OnInitializedAsync()
     {
@@ -126,7 +158,7 @@
     }
 
     // Search
-    string _debouncedText = string.Empty;
+    string searchText = string.Empty;
 
     void HandleIntervalElapsed(string debouncedText)
     {
@@ -140,8 +172,14 @@
         
     //}
 
-    private void SearchPhotos()
+    private async Task<IEnumerable<string>> SearchPhotos(string value)
     {
+        // In real life use an asynchronous function for fetching data from an api.
+        await Task.Delay(5);
 
+        // if text is null or empty, don't return values (drop-down will not open)
+        if (string.IsNullOrEmpty(value))
+            return new string[0];
+        return states.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
     }
 }
