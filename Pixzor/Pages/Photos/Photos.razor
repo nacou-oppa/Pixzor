@@ -6,7 +6,7 @@
         position: relative;
     }
 
-    .mud-autocomplete {
+    form {
         display: flex;
         width: 60%;
     }
@@ -15,7 +15,7 @@
     .mud-grid-spacing-xs-3 {
      width: 100%; 
      margin: 0; 
-}
+    }
 
     @@media (max-width: 768px) {
         .photo-container {
@@ -24,7 +24,7 @@
     }
 </style>
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Pixzor - Home</PageTitle>
 
 <MudContainer Class="d-flex flex-column ma-0 pa-0" MaxWidth="MaxWidth.False">
     <MudContainer Class="home-search" MaxWidth="MaxWidth.False">
@@ -37,79 +37,40 @@
                       Style="position: absolute; top: 30%; left: 0; align-items: center;" 
                       MaxWidth="MaxWidth.False">
             <MudText Style="color: #fff" Typo="Typo.h4"><b><span style="color: #E3655B;">Pixzor</span> Home Page</b></MudText>
-            <MudAutocomplete Class="rounded"
-                             T="string"
-                             @bind-Value="@searchText"
-                             SearchFunc="SearchPhotos"
-                             OnAdornmentClick="@((e) => Console.WriteLine(e.Button))"
-                             Label="Search" 
-                             ResetValueOnEmptyText="true"
-                             Variant="Variant.Filled" 
-                             Adornment="Adornment.End"
-                             AdornmentIcon="@Icons.Filled.Search"
-                             AdornmentColor="Color.Primary"
-                             Style="background-color: white;">
-            
-                <MoreItemsTemplate>
-                    <MudText Align="Align.Center" Class="px-4 py-1">
-                        Only the first 10 items are shown
-                    </MudText>
-                </MoreItemsTemplate>
+            <EditForm Model="search" OnValidSubmit="NavToSearch">
+                <MudAutocomplete Class="rounded"
+                                 T="string"
+                                 @bind-Value="@searchText"
+                                 SearchFunc="SearchPhotos"
+                                 OnAdornmentClick="NavToSearch"
+                                 Label="Search" 
+                                 CoerceValue="true"
+                                 ResetValueOnEmptyText="true"
+                                 Variant="Variant.Filled" 
+                                 Adornment="Adornment.End"
+                                 AdornmentIcon="@Icons.Filled.Search"
+                                 AdornmentColor="Color.Primary"
+                                 Style="background-color: white;">
+                    <MoreItemsTemplate>
+                        <MudText Align="Align.Center" Class="px-4 py-1">
+                            Only the first 10 items are shown
+                        </MudText>
+                    </MoreItemsTemplate>
 
-                <NoItemsTemplate>
-                    <MudText Align="Align.Center" Class="px-4 py-1">
-                        No items found
-                    </MudText>
-                </NoItemsTemplate>
+                    <NoItemsTemplate>
+                        <MudText Align="Align.Center" Class="px-4 py-1">
+                            No items found
+                        </MudText>
+                    </NoItemsTemplate>
 
-            </MudAutocomplete>
+                </MudAutocomplete>
+            </EditForm>
         </MudContainer>
     </MudContainer>
     <MudContainer Class="photo-container" MaxWidth="MaxWidth.False" Style="align-self: center; padding: 0 40px; margin-top: 30px;">
         <MudTabs Elevation="0" Rounded="true" ApplyEffectsToContainer="true" PanelClass="py-6" Centered="true" Color="Color.Surface">
             <MudTabPanel Text="Tab One" Style="padding: 0;">
-                <MudGrid Class="d-flex flex-nowrap gap-4">
-
-                    <!-- Hidden at sm and down -->
-                    <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                        <MudItem Class="pa-0" md="4">
-                            <MudStack Spacing="4">
-                            @*<Virtualize ItemsProvider="GetCuratedPhotos" Context="photo">*@
-                                @if(photoPage.per_page > 0)
-                                {
-                                    @foreach (var photo in photoPage.Photos.Take(80 / 3))
-                                    {
-                                        <PhotoGrid Src="@photo.Src" />   
-                                    }
-                                }
-                            @*</Virtualize>*@
-                            </MudStack>
-                        </MudItem>
-                        <MudItem Class="pa-0" md="4">
-                            <MudStack Spacing="4">
-
-                            @if (photoPage.per_page > 0)
-                            {
-                                @foreach (var photo in photoPage.Photos.Skip(80 / 3).Take((80 - 80 / 3) / 2))
-                                {
-                                    <PhotoGrid Src="@photo.Src" />
-                                }
-                            }
-                            </MudStack>
-                        </MudItem>
-                        <MudItem Class="pa-0" md="4">
-                            <MudStack Spacing="4">
-                            @if (photoPage.per_page > 0)
-                            {
-                                @foreach (var photo in photoPage.Photos.TakeLast((80 - 80 / 3) / 2))
-                                {
-                                    <PhotoGrid Src="@photo.Src" />
-                                }
-                            }
-                            </MudStack>
-                        </MudItem>
-                    </MudHidden>
-                </MudGrid>
+                    <PhotoGrid photoPage="@photoPage" />
             </MudTabPanel>
             <MudTabPanel Text="Tab Two">
                 <MudText></MudText>
@@ -126,6 +87,9 @@
 @code {
     //public EventCallback<Photo> OnScroll { get; set; }
     //public int totalPhotos { get; set; }
+
+    //EditForm
+    string search = string.Empty;
 
     private string[] states =
     {
@@ -159,6 +123,12 @@
 
     // Search
     string searchText = string.Empty;
+
+    private void NavToSearch()
+    {
+        if (string.IsNullOrWhiteSpace(searchText)) NavigationManager.NavigateTo("/");
+        else NavigationManager.NavigateTo($"/search/{searchText}");
+    }
 
     void HandleIntervalElapsed(string debouncedText)
     {

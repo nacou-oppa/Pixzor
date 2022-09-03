@@ -1,0 +1,31 @@
+﻿@page "/search/{SearchText}"
+
+<PageTitle>Pixzor - Search</PageTitle>
+@if(PhotoPage.Photos != null && PhotoPage.Photos.Count > 0)
+{
+    <MudContainer>
+        <PhotoGrid photoPage="@PhotoPage" />
+    </MudContainer>
+}
+else
+{
+    <h1>Nothing to Show</h1>
+}
+
+@code {
+    [Parameter]
+    public string SearchText { get; set; }
+
+    PhotoPage PhotoPage = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadSearchedPhotos();
+
+    }
+
+    private async Task LoadSearchedPhotos()
+    {
+        PhotoPage = await PhotoService.SearchPhoto(SearchText, 1, 80);
+    }
+}

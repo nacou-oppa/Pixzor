@@ -1,11 +1,46 @@
-﻿<MudPaper Class="d-flex" Style="height: fit-content">
-    <MudImage Src="@(Src.Large)"
-              Fluid="true"
-              ObjectFit="ObjectFit.Contain"
-              Style="width: 100%; height: auto;" />
-</MudPaper>
+﻿<MudGrid Class="d-flex flex-nowrap gap-4">
+
+    <!-- Hidden at sm and down -->
+    <MudHidden Breakpoint="Breakpoint.SmAndDown">
+        <MudItem Class="pa-0" md="4">
+            <MudStack Spacing="4">
+            @*<Virtualize ItemsProvider="GetCuratedPhotos" Context="photo">*@
+            @if (photoPage.per_page > 0)
+            {
+                @foreach (var photo in photoPage.Photos.Take(80 / 3))
+                {
+                    <PhotoItem Src="@photo.Src" />   
+                }
+            }
+            @*</Virtualize>*@
+            </MudStack>
+        </MudItem>
+        <MudItem Class="pa-0" md="4">
+            <MudStack Spacing="4">
+            @if (photoPage.per_page > 0)
+            {
+                @foreach (var photo in photoPage.Photos.Skip(80 / 3).Take((80 - 80 / 3) / 2))
+                {
+                    <PhotoItem Src="@photo.Src" />
+                }
+            }
+            </MudStack>
+        </MudItem>
+        <MudItem Class="pa-0" md="4">
+            <MudStack Spacing="4">
+            @if (photoPage.per_page > 0)
+            {
+                @foreach (var photo in photoPage.Photos.TakeLast((80 - 80 / 3) / 2))
+                {
+                    <PhotoItem Src="@photo.Src" />
+                }
+            }
+            </MudStack>
+        </MudItem>
+    </MudHidden>
+</MudGrid>
 
 @code {
     [Parameter]
-    public Source Src { get; set; }
+    public PhotoPage photoPage { get; set; }
 }
