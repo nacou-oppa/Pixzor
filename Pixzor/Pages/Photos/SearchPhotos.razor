@@ -1,4 +1,5 @@
 ﻿@page "/search/{SearchText}"
+@using System.ComponentModel.DataAnnotations
 
 <PageTitle>Pixzor - Search</PageTitle>
 
@@ -41,10 +42,20 @@
                         </MudSelect>
                     </MudItem>
                     <MudItem md="4">
-                        <MudForm>
+                        <EditForm Model="mudColor">
                             <DataAnnotationsValidator />
-                            <MudColorPicker Label="Palette" ColorPickerView="ColorPickerView.Palette" Palette="CustomPalette" ColorPickerMode="ColorPickerMode.HEX"  />
-                        </MudForm>
+                            <ValidationSummary />
+                            <MudColorPicker Text="@color" 
+                                            Label="Palette" 
+                                            ColorPickerView="ColorPickerView.Palette" 
+                                            Palette="CustomPalette" 
+                                            ColorPickerMode="ColorPickerMode.HEX" 
+                                            AnchorOrigin="Origin.BottomCenter" 
+                                            Editable="true" 
+                                            AdornmentColor="Color.Primary"
+                                            Validation="colorValidator.Validation" />
+                            <ValidationMessage For="() => color" />
+                        </EditForm>
                     </MudItem>
                 </MudGrid>
             }
@@ -78,17 +89,25 @@ else
     public bool toggleFilter { get; set; }
     public string orientation { get; set; } = string.Empty;
     public string size { get; set; } = string.Empty;
+
+    [RegularExpression("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Invalid Format")]
     public string color { get; set; } = string.Empty;
+
+    public MudColor mudColor { get; set; } = new("#ffffff");
 
     protected override async Task OnParametersSetAsync()
     {
         await LoadSearchedPhotos();
-
     }
 
-    private async Task LoadSearchedPhotos()
+    private async Task LoadSearchedPhotos() => PhotoPage = await PhotoService.SearchPhoto(SearchText, 1);
+
+    private async Task FilterPhotos()
     {
-        PhotoPage = await PhotoService.SearchPhoto(SearchText, 1);
+        Console.WriteLine(orientation);
+
+        PhotoPage = await PhotoService.SearchPhoto(SearchText, 1, 0, orientation, size, color);
+        StateHasChanged();
     }
 
 
@@ -103,4 +122,32 @@ else
         "#EF5350", "#EC407A", "#AB47BC", "#7E57C2", "#5C6BC0",
         "#E53935", "#D81B60", "#8E24AA", "#5E35B1", "#3949AB"
     };
+    
+    // The validation rules (overkill, I know, but very fluent):
+    FluentValueValidator<string> colorValidator = new(x => x
+        .Matches("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")
+        .MaximumLength(7));
+
+    /// <summary>
+    /// A glue class to make it easy to define validation rules for single values using FluentValidation
+    /// You can reuse this class for all your fields, like for the credit card rules above.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class FluentValueValidator<T> : AbstractValidator<T>
+    {
+        public FluentValueValidator(Action<IRuleBuilderInitial<T, T>> rule)
+        {
+            rule(RuleFor(x => x));
+        }
+
+        private IEnumerable<string> ValidateValue(T arg)
+        {
+            var result = Validate(arg);
+            if (result.IsValid)
+                return new string[0];
+            return result.Errors.Select(e => e.ErrorMessage);
+        }
+
+        public Func<T, IEnumerable<string>> Validation => ValidateValue;
+    }
 }
