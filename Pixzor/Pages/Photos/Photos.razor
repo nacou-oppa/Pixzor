@@ -1,13 +1,27 @@
 ﻿@page "/"
 
 <style>
+    .home-search {
+        display: flex;
+        position: relative;
+    }
+
+    /* MudGrid */
+    .mud-grid-spacing-xs-3 {
+        width: 100%;
+        margin: 0;
+    }
+
+    @@media (max-width: 768px) {
+        .photo-container {
+            padding: 0 12px !important;
+        }
+    }
 
 </style>
 
 <PageTitle>Pixzor - Home</PageTitle>
-<div>
 
-</div>
 <MudContainer Class="d-flex flex-column ma-0 pa-0" MaxWidth="MaxWidth.False">
     <MudContainer Class="home-search" MaxWidth="MaxWidth.False">
         <MudImage Src="https://images.pexels.com/photos/1083822/pexels-photo-1083822.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
@@ -19,34 +33,10 @@
                       Style="position: absolute; top: 30%; left: 0; align-items: center;" 
                       MaxWidth="MaxWidth.False">
             <MudText Style="color: #fff" Typo="Typo.h4"><b><span style="color: #E3655B;">Pixzor</span> Home Page</b></MudText>
-            <EditForm Model="search" OnValidSubmit="NavToSearch">
-                <MudAutocomplete Class="rounded"
-                                 T="string"
-                                 @bind-Value="@searchText"
-                                 SearchFunc="SearchPhotos"
-                                 OnAdornmentClick="NavToSearch"
-                                 Label="Search" 
-                                 CoerceValue="true"
-                                 ResetValueOnEmptyText="true"
-                                 Variant="Variant.Filled" 
-                                 Adornment="Adornment.End"
-                                 AdornmentIcon="@Icons.Filled.Search"
-                                 AdornmentColor="Color.Primary"
-                                 Style="background-color: white;">
-                    <MoreItemsTemplate>
-                        <MudText Align="Align.Center" Class="px-4 py-1">
-                            Only the first 10 items are shown
-                        </MudText>
-                    </MoreItemsTemplate>
 
-                    <NoItemsTemplate>
-                        <MudText Align="Align.Center" Class="px-4 py-1">
-                            No items found
-                        </MudText>
-                    </NoItemsTemplate>
-
-                </MudAutocomplete>
-            </EditForm>
+            <!-- SearchBar Component -->
+            <SearchBar />
+            
         </MudContainer>
     </MudContainer>
     <MudContainer Class="photo-container" MaxWidth="MaxWidth.False" Style="align-self: center; padding: 0 40px; margin-top: 30px;">
@@ -63,8 +53,6 @@
         </MudTabs>
     </MudContainer>
 </MudContainer>
-
-<MudButton>Click</MudButton>
 
 @code {
     //public EventCallback<Photo> OnScroll { get; set; }
@@ -111,18 +99,6 @@
         if (string.IsNullOrWhiteSpace(searchText)) NavigationManager.NavigateTo("/");
         else NavigationManager.NavigateTo($"/search/{searchText}");
     }
-
-    void HandleIntervalElapsed(string debouncedText)
-    {
-        // at this stage, interval has elapsed
-    }
-
-
-    //private ValueTask<ItemsProviderResult<Photo>> LoadPhotos(ItemsProviderRequest request)
-    //{
-    //    var numPhotos = Math.Min(request.Count, totalPhotos - request.StartIndex);
-        
-    //}
 
     private async Task<IEnumerable<string>> SearchPhotos(string value)
     {

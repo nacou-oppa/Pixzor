@@ -6,7 +6,7 @@
         public int Page { get; set; }
 
         [JsonPropertyName("per_page")]
-        public int per_page { get; set; }
+        public int PerPage { get; set; }
 
         [JsonPropertyName("photos")]
         public List<Photo> Photos { get; set; }

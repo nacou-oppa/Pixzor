@@ -2,10 +2,65 @@
 
 <PageTitle>Pixzor - Search</PageTitle>
 
-@if(PhotoPage.Photos != null && PhotoPage.Photos.Count > 0)
+@if (PhotoPage.Photos != null && PhotoPage.Photos.Count > 0)
 {
-    <MudContainer>
-        <PhotoGrid photoPage="@PhotoPage" />
+    <MudContainer Class="d-flex flex-column ma-0 pa-0" MaxWidth="MaxWidth.False">
+        <MudContainer Class="home-search" MaxWidth="MaxWidth.False">
+            <MudContainer Class="d-flex flex-column gap-5"
+                      Style="position: absolute; top: 30%; left: 0; align-items: center;"
+                      MaxWidth="MaxWidth.False">
+                <MudText Style="color: #fff" Typo="Typo.h4"><b><span style="color: #E3655B;">Pixzor</span> Home Page</b></MudText>
+            </MudContainer>
+        </MudContainer>
+        <MudContainer Class="photo-container" MaxWidth="MaxWidth.False" Style="align-self: center; padding: 0 40px; margin-top: 30px;">
+            <MudPaper Class="d-flex align-center my-4 pr-3" Style="width: fit-content;" @onclick="() => toggleFilter = !toggleFilter">
+                <MudCheckBox @bind-Checked="toggleFilter"
+                         UncheckedIcon="@Icons.Filled.FilterList"
+                         CheckedIcon="@Icons.Filled.FilterListOff"
+                         Color="Color.Primary">
+                    <MudText Typo="Typo.h6" Color="Color.Primary">Filter</MudText>
+                </MudCheckBox>
+            </MudPaper>
+            @if (toggleFilter)
+            {
+                <MudGrid Justify="Justify.Center">
+                    <MudItem md="4">
+                        <MudSelect T="string" @bind-Value="orientation" AnchorOrigin="Origin.BottomCenter">
+                            <MudSelectItem Value="@("")">All Orientations</MudSelectItem>
+                            <MudSelectItem Value="@("landscape")">Horizontal</MudSelectItem>
+                            <MudSelectItem Value="@("portrait")">Vertical</MudSelectItem>
+                            <MudSelectItem Value="@("square")">Square</MudSelectItem>
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem md="4">
+                        <MudSelect T="string" @bind-Value="size" AnchorOrigin="Origin.BottomCenter">
+                            <MudSelectItem Value="@("")">All Sizes</MudSelectItem>
+                            <MudSelectItem Value="@("large")">Large</MudSelectItem>
+                            <MudSelectItem Value="@("medium")">Medium</MudSelectItem>
+                            <MudSelectItem Value="@("small")">Small</MudSelectItem>
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem md="4">
+                        <MudForm>
+                            <DataAnnotationsValidator />
+                            <MudColorPicker Label="Palette" ColorPickerView="ColorPickerView.Palette" Palette="CustomPalette" ColorPickerMode="ColorPickerMode.HEX"  />
+                        </MudForm>
+                    </MudItem>
+                </MudGrid>
+            }
+
+            <MudTabs Elevation="0" Rounded="true" ApplyEffectsToContainer="true" Centered="true" PanelClass="py-6" Color="Color.Surface">
+                <MudTabPanel Text="Tab One" Style="padding: 0;">
+                    <PhotoGrid photoPage="@PhotoPage" />
+                </MudTabPanel>
+                <MudTabPanel Text="Tab Two">
+                    <MudText></MudText>
+                </MudTabPanel>
+                <MudTabPanel Text="Tab Three">
+                    <MudText>Content Three</MudText>
+                </MudTabPanel>
+            </MudTabs>
+        </MudContainer>
     </MudContainer>
 }
 else
@@ -19,6 +74,12 @@ else
 
     PhotoPage PhotoPage = new();
 
+    // Filter
+    public bool toggleFilter { get; set; }
+    public string orientation { get; set; } = string.Empty;
+    public string size { get; set; } = string.Empty;
+    public string color { get; set; } = string.Empty;
+
     protected override async Task OnParametersSetAsync()
     {
         await LoadSearchedPhotos();
@@ -27,6 +88,19 @@ else
 
     private async Task LoadSearchedPhotos()
     {
-        PhotoPage = await PhotoService.SearchPhoto(SearchText, 1, 80);
+        PhotoPage = await PhotoService.SearchPhoto(SearchText, 1);
     }
+
+
+    // Photo Color
+    public IEnumerable<MudColor> CustomPalette { get; set; } = new MudColor[]
+    {
+        "#F44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5",
+        "#FFEBEE", "#FCE4EC", "#F3E5F5", "#EDE7F6", "#E8EAF6",
+        "#FFCDD2", "#F8BBD0", "#E1BEE7", "#D1C4E9", "#C5CAE9",
+        "#EF9A9A", "#F48FB1", "#CE93D8", "#B39DDB", "#9FA8DA",
+        "#E57373", "#F06292", "#BA68C8", "#9575CD", "#7986CB",
+        "#EF5350", "#EC407A", "#AB47BC", "#7E57C2", "#5C6BC0",
+        "#E53935", "#D81B60", "#8E24AA", "#5E35B1", "#3949AB"
+    };
 }

@@ -1,44 +1,40 @@
-﻿<MudGrid Class="d-flex flex-nowrap gap-4">
+﻿@if (photoPage.PerPage > 0)
+{
+    <MudGrid Class="d-flex flex-nowrap gap-4">
 
-    <!-- Hidden at sm and down -->
-    <MudHidden Breakpoint="Breakpoint.SmAndDown">
-        <MudItem Class="pa-0" md="4">
-            <MudStack Spacing="4">
-            @*<Virtualize ItemsProvider="GetCuratedPhotos" Context="photo">*@
-            @if (photoPage.per_page > 0)
-            {
-                @foreach (var photo in photoPage.Photos.Take(80 / 3))
-                {
-                    <PhotoItem Src="@photo.Src" />   
-                }
-            }
-            @*</Virtualize>*@
-            </MudStack>
-        </MudItem>
-        <MudItem Class="pa-0" md="4">
-            <MudStack Spacing="4">
-            @if (photoPage.per_page > 0)
-            {
-                @foreach (var photo in photoPage.Photos.Skip(80 / 3).Take((80 - 80 / 3) / 2))
-                {
-                    <PhotoItem Src="@photo.Src" />
-                }
-            }
-            </MudStack>
-        </MudItem>
-        <MudItem Class="pa-0" md="4">
-            <MudStack Spacing="4">
-            @if (photoPage.per_page > 0)
-            {
-                @foreach (var photo in photoPage.Photos.TakeLast((80 - 80 / 3) / 2))
-                {
-                    <PhotoItem Src="@photo.Src" />
-                }
-            }
-            </MudStack>
-        </MudItem>
-    </MudHidden>
-</MudGrid>
+        <!-- Hidden at sm and down -->
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+            <MudItem Class="pa-0" md="4">
+                <MudStack Spacing="4">
+                    @*<Virtualize ItemsProvider="GetCuratedPhotos" Context="photo">*@
+
+                    @foreach (var photo in photoPage.Photos.Take(photoPage.PerPage / 3))
+                    {
+                        <PhotoItem Src="@photo.Src" />
+                    }
+                    @*</Virtualize>*@
+                </MudStack>
+            </MudItem>
+            <MudItem Class="pa-0" md="4">
+                <MudStack Spacing="4">
+
+                    @foreach (var photo in photoPage.Photos.Skip(photoPage.PerPage / 3).Take((photoPage.PerPage - photoPage.PerPage / 3) / 2))
+                    {
+                        <PhotoItem Src="@photo.Src" />
+                    }
+                </MudStack>
+            </MudItem>
+            <MudItem Class="pa-0" md="4">
+                <MudStack Spacing="4">
+                    @foreach (var photo in photoPage.Photos.TakeLast((photoPage.PerPage - photoPage.PerPage / 3) / 2))
+                    {
+                        <PhotoItem Src="@photo.Src" />
+                    }
+                </MudStack>
+            </MudItem>
+        </MudHidden>
+    </MudGrid>
+}
 
 @code {
     [Parameter]
