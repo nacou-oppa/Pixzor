@@ -1,5 +1,6 @@
 ﻿@page "/search/{SearchText}"
 @using System.ComponentModel.DataAnnotations
+@using System.Web
 
 <PageTitle>Pixzor - Search</PageTitle>
 
@@ -14,6 +15,7 @@
             </MudContainer>
         </MudContainer>
         <MudContainer Class="photo-container" MaxWidth="MaxWidth.False" Style="align-self: center; padding: 0 40px; margin-top: 30px;">
+
             <MudPaper Class="d-flex align-center my-4 pr-3" Style="width: fit-content;" @onclick="() => toggleFilter = !toggleFilter">
                 <MudCheckBox @bind-Checked="toggleFilter"
                          UncheckedIcon="@Icons.Filled.FilterList"
@@ -21,55 +23,82 @@
                          Color="Color.Primary">
                     <MudText Typo="Typo.h6" Color="Color.Primary">Filter</MudText>
                 </MudCheckBox>
+                @if (!string.IsNullOrEmpty(orientation) || !string.IsNullOrEmpty(size) || !string.IsNullOrEmpty(filterForm.color))
+                {
+                    <MudIconButton Class="ml-3" Icon="@Icons.Filled.Clear" Variant="Variant.Outlined" Color="Color.Primary" OnClick="() => FilterPhotos()" />
+
+                }
             </MudPaper>
+
             @if (toggleFilter)
             {
                 <MudGrid Justify="Justify.Center">
+
                     <MudItem md="4">
-                        <MudSelect T="string" @bind-Value="orientation" AnchorOrigin="Origin.BottomCenter">
+                        <MudSelect T="string" Value="orientation" Label="Orientation" Placeholder="All Orientations"
+                           AnchorOrigin="Origin.BottomCenter"
+                           ValueChanged="@((e) => FilterPhotos("orientation", e))">
+
                             <MudSelectItem Value="@("")">All Orientations</MudSelectItem>
                             <MudSelectItem Value="@("landscape")">Horizontal</MudSelectItem>
                             <MudSelectItem Value="@("portrait")">Vertical</MudSelectItem>
                             <MudSelectItem Value="@("square")">Square</MudSelectItem>
+
                         </MudSelect>
                     </MudItem>
+
                     <MudItem md="4">
-                        <MudSelect T="string" @bind-Value="size" AnchorOrigin="Origin.BottomCenter">
+                        <MudSelect T="string" Value="size" Label="Size" Placeholder="All Sizes"
+                           AnchorOrigin="Origin.BottomCenter"
+                           ValueChanged="@((e) => FilterPhotos("size", e))">
+
                             <MudSelectItem Value="@("")">All Sizes</MudSelectItem>
                             <MudSelectItem Value="@("large")">Large</MudSelectItem>
                             <MudSelectItem Value="@("medium")">Medium</MudSelectItem>
                             <MudSelectItem Value="@("small")">Small</MudSelectItem>
+
                         </MudSelect>
                     </MudItem>
+
                     <MudItem md="4">
-                        <EditForm Model="mudColor">
-                            <DataAnnotationsValidator />
-                            <ValidationSummary />
-                            <MudColorPicker Text="@color" 
-                                            Label="Palette" 
-                                            ColorPickerView="ColorPickerView.Palette" 
-                                            Palette="CustomPalette" 
-                                            ColorPickerMode="ColorPickerMode.HEX" 
-                                            AnchorOrigin="Origin.BottomCenter" 
-                                            Editable="true" 
+
+                            <MudColorPicker Value="@filterForm.mudColor"
+                                            ValueChanged="@((e) => FilterPhotos("color", e.Value))"
+                                            Label="Color"
+                                            Palette="CustomPalette"
+                                            ColorPickerMode="ColorPickerMode.HEX"
+                                            DisableToolbar="false"
+                                            DisableAlpha="true"
+                                            DisableModeSwitch="true"
+                                            AnchorOrigin="Origin.BottomCenter"
                                             AdornmentColor="Color.Primary"
-                                            Validation="colorValidator.Validation" />
-                            <ValidationMessage For="() => color" />
-                        </EditForm>
+                                            Validation="colorValidator.Validation"
+                                            For="@(() => filterForm.mudColor)"/>
+                                            
                     </MudItem>
+
                 </MudGrid>
             }
 
-            <MudTabs Elevation="0" Rounded="true" ApplyEffectsToContainer="true" Centered="true" PanelClass="py-6" Color="Color.Surface">
+            <MudTabs Elevation="0"
+                 Rounded="true"
+                 ApplyEffectsToContainer="true"
+                 Centered="true"
+                 PanelClass="py-6"
+                 Color="Color.Surface">
+
                 <MudTabPanel Text="Tab One" Style="padding: 0;">
                     <PhotoGrid photoPage="@PhotoPage" />
                 </MudTabPanel>
+
                 <MudTabPanel Text="Tab Two">
                     <MudText></MudText>
                 </MudTabPanel>
+
                 <MudTabPanel Text="Tab Three">
                     <MudText>Content Three</MudText>
                 </MudTabPanel>
+
             </MudTabs>
         </MudContainer>
     </MudContainer>
@@ -91,9 +120,9 @@ else
     public string size { get; set; } = string.Empty;
 
     [RegularExpression("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Invalid Format")]
-    public string color { get; set; } = string.Empty;
+    public string color { get; set; } = "#594ae2";
 
-    public MudColor mudColor { get; set; } = new("#ffffff");
+    FilterForm filterForm = new();
 
     protected override async Task OnParametersSetAsync()
     {
@@ -102,12 +131,29 @@ else
 
     private async Task LoadSearchedPhotos() => PhotoPage = await PhotoService.SearchPhoto(SearchText, 1);
 
-    private async Task FilterPhotos()
+    private async Task FilterPhotos(string type = "clear", string e = "")
     {
-        Console.WriteLine(orientation);
+        if(type.Equals("clear"))
+        {
+            orientation = string.Empty;
+            size = string.Empty;
+            filterForm.mudColor = new("#E3655B");
+            filterForm.color = string.Empty;
 
-        PhotoPage = await PhotoService.SearchPhoto(SearchText, 1, 0, orientation, size, color);
-        StateHasChanged();
+            PhotoPage = await PhotoService.SearchPhoto(SearchText, 1, 0, orientation, size, filterForm.color);
+        }
+        else
+        {
+            if (type.Equals("orientation")) orientation = e;
+            if (type.Equals("size")) size = e;
+            if (type.Equals("color")) 
+            {
+                filterForm.mudColor = new MudColor(e);
+                filterForm.color = HttpUtility.UrlEncode(filterForm.mudColor.Value.Substring(0, 7));
+            }
+
+            PhotoPage = await PhotoService.SearchPhoto(SearchText, 1, 0, orientation, size, filterForm.color);
+        }
     }
 
 
@@ -122,7 +168,17 @@ else
         "#EF5350", "#EC407A", "#AB47BC", "#7E57C2", "#5C6BC0",
         "#E53935", "#D81B60", "#8E24AA", "#5E35B1", "#3949AB"
     };
-    
+
+    // Search validate model
+    public class FilterForm
+    {
+        [RegularExpression("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Invalid Format")]
+        public string color { get; set; } = "";
+
+        [RegularExpression("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Invalid Format")]
+        public MudColor mudColor { get; set; } = new("#E3655B");
+    }
+
     // The validation rules (overkill, I know, but very fluent):
     FluentValueValidator<string> colorValidator = new(x => x
         .Matches("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")
