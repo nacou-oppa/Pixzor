@@ -1,0 +1,38 @@
+﻿@page "/photo/{id:int}"
+<PageTitle>Photo</PageTitle>
+@if (Photo.Id != 0)
+{
+    <MudContainer MaxWidth="MaxWidth.False">
+        <MudCard Class="mx-auto" Style="width: 50%;">
+            <MudCardHeader>
+                <MudText Typo="Typo.h4" GutterBottom="true">@Photo.Alt</MudText>
+                <MudText Typo="Typo.subtitle1" GutterBottom="true">By: @Photo.Photographer</MudText>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudImage Src="@Photo.Src.Large2x" Alt="@Photo.Alt" Style="width: 100%;" />
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="IncrementCount">Like</MudButton>
+                <MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="IncrementCount">Dislike</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudContainer>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Photo Photo = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Console.WriteLine(Photo.Id);
+        Photo = await PhotoService.GetPhoto(Id);
+    }
+
+    void IncrementCount()
+    {
+
+    }
+}

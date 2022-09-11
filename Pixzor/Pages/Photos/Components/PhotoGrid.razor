@@ -10,7 +10,7 @@
 
                     @foreach (var photo in photoPage.Photos.Take(photoPage.PerPage / 3))
                     {
-                        <PhotoItem Src="@photo.Src" />
+                        <PhotoItem Photo="@photo" />
                     }
                     @*</Virtualize>*@
                 </MudStack>
@@ -20,7 +20,7 @@
 
                     @foreach (var photo in photoPage.Photos.Skip(photoPage.PerPage / 3).Take((photoPage.PerPage - photoPage.PerPage / 3) / 2))
                     {
-                        <PhotoItem Src="@photo.Src" />
+                        <PhotoItem Photo="@photo" />
                     }
                 </MudStack>
             </MudItem>
@@ -28,7 +28,7 @@
                 <MudStack Spacing="4">
                     @foreach (var photo in photoPage.Photos.TakeLast((photoPage.PerPage - photoPage.PerPage / 3) / 2))
                     {
-                        <PhotoItem Src="@photo.Src" />
+                        <PhotoItem Photo="@photo" />
                     }
                 </MudStack>
             </MudItem>

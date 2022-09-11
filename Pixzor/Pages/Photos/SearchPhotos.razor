@@ -1,6 +1,4 @@
 ﻿@page "/search/{SearchText}"
-@using System.ComponentModel.DataAnnotations
-@using System.Web
 
 <PageTitle>Pixzor - Search</PageTitle>
 
@@ -32,7 +30,7 @@
 
             @if (toggleFilter)
             {
-                <MudGrid Justify="Justify.Center">
+                <MudGrid Class="mb-4" Justify="Justify.Center">
 
                     <MudItem md="4">
                         <MudSelect T="string" Value="orientation" Label="Orientation" Placeholder="All Orientations"
@@ -72,7 +70,6 @@
                                             DisableModeSwitch="true"
                                             AnchorOrigin="Origin.BottomCenter"
                                             AdornmentColor="Color.Primary"
-                                            Validation="colorValidator.Validation"
                                             For="@(() => filterForm.mudColor)"/>
                                             
                     </MudItem>
@@ -118,9 +115,6 @@ else
     public bool toggleFilter { get; set; }
     public string orientation { get; set; } = string.Empty;
     public string size { get; set; } = string.Empty;
-
-    [RegularExpression("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Invalid Format")]
-    public string color { get; set; } = "#594ae2";
 
     FilterForm filterForm = new();
 
@@ -172,38 +166,8 @@ else
     // Search validate model
     public class FilterForm
     {
-        [RegularExpression("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Invalid Format")]
         public string color { get; set; } = "";
 
-        [RegularExpression("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Invalid Format")]
         public MudColor mudColor { get; set; } = new("#E3655B");
-    }
-
-    // The validation rules (overkill, I know, but very fluent):
-    FluentValueValidator<string> colorValidator = new(x => x
-        .Matches("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")
-        .MaximumLength(7));
-
-    /// <summary>
-    /// A glue class to make it easy to define validation rules for single values using FluentValidation
-    /// You can reuse this class for all your fields, like for the credit card rules above.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class FluentValueValidator<T> : AbstractValidator<T>
-    {
-        public FluentValueValidator(Action<IRuleBuilderInitial<T, T>> rule)
-        {
-            rule(RuleFor(x => x));
-        }
-
-        private IEnumerable<string> ValidateValue(T arg)
-        {
-            var result = Validate(arg);
-            if (result.IsValid)
-                return new string[0];
-            return result.Errors.Select(e => e.ErrorMessage);
-        }
-
-        public Func<T, IEnumerable<string>> Validation => ValidateValue;
     }
 }
