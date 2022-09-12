@@ -1,23 +1,38 @@
 ﻿@page "/photo/{id:int}"
 <PageTitle>Photo</PageTitle>
-@if (Photo.Id != 0)
-{
-    <MudContainer MaxWidth="MaxWidth.False">
-        <MudCard Class="mx-auto" Style="width: 50%;">
-            <MudCardHeader>
-                <MudText Typo="Typo.h4" GutterBottom="true">@Photo.Alt</MudText>
-                <MudText Typo="Typo.subtitle1" GutterBottom="true">By: @Photo.Photographer</MudText>
+<MudContainer MaxWidth="MaxWidth.False">
+    @if (Photo.Id != 0)
+    {
+        <MudContainer MaxWidth="MaxWidth.False">
+            <MudCardHeader Class="px-10" Style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
+                <div class="d-flex flex-column">
+                    <MudText Typo="Typo.h3" GutterBottom="true"><b>@(string.IsNullOrEmpty(Photo.Alt) ? "This Photo Doesn't Have Title" : Photo.Alt)</b></MudText>
+                    <MudLink Href="@Photo.PhotographerUrl" Target="_blank" Underline="Underline.None" Class="d-flex ml-3" Style="align-items: baseline; gap: 20px;">
+                        <MudAvatar Style=@($"background-color: {String.Format("#{0:X6}", new Random((int)DateTime.Now.Ticks).Next(0x1000000))}; cursor: pointer;")>
+                            @Photo.Photographer[0]
+                        </MudAvatar>
+                        <MudText Typo="Typo.h5" GutterBottom="true" Color="Color.Dark" Style="cursor: pointer;">Photographer: @Photo.Photographer</MudText>
+                    </MudLink>
+                </div>
+                <MudLink Href="https://www.pexels.com" Target="_blank" Style="margin-left: auto;">
+                    <MudImage Src="https://images.pexels.com/lib/api/pexels.png" Style="height: 80px;" />
+                </MudLink>
             </MudCardHeader>
-            <MudCardContent>
-                <MudImage Src="@Photo.Src.Large2x" Alt="@Photo.Alt" Style="width: 100%;" />
+            <MudCardContent Class="pa-0">
+                <MudLink Href="@(Photo.Url)" Target="_blank" Style="display: block; width: fit-content; margin: auto;">
+                    <MudImage Src="@Photo.Src.Large2x" Alt="@Photo.Alt" Style=" height: 800px;" />
+                </MudLink>
             </MudCardContent>
-            <MudCardActions>
-                <MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="IncrementCount">Like</MudButton>
-                <MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="IncrementCount">Dislike</MudButton>
+            <MudCardActions Style="justify-content: end; box-shadow: rgba(0, 0, 0, 0.24) 0px -3px 8px;">
+                <MudToggleIconButton Size="Size.Large" Icon="@Icons.Filled.FavoriteBorder" Color="@Color.Primary" Title="Like"
+                                 ToggledSize="Size.Large" ToggledIcon="@Icons.Filled.Favorite" ToggledColor="@Color.Primary" ToggledTitle="UnLike" />
+                <MudIconButton Link="@(Photo.Url)" Target="_blank" Size="Size.Large" Color="Color.Primary" Icon="@Icons.Filled.Download">Original</MudIconButton>
             </MudCardActions>
-        </MudCard>
-    </MudContainer>
-}
+        </MudContainer>
+    }
+
+    <PhotoGrid
+</MudContainer>
 
 @code {
     [Parameter]
@@ -27,7 +42,6 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        Console.WriteLine(Photo.Id);
         Photo = await PhotoService.GetPhoto(Id);
     }
 
@@ -35,4 +49,5 @@
     {
 
     }
+
 }

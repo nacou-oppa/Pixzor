@@ -10,54 +10,47 @@
         opacity: 1;
     }
 
-    @@keyframes slowlyappear {
-        0% {
-            visibility: hidden;
-        }
-        100% {
-            visibility: visible;
-        }
+    img {
+        transition: filter 0.5s linear;
     }
+
+        img:hover {
+            filter: brightness(.7);
+        }
 </style>
 
 <MudContainer Class="item-container d-flex" Style="height: fit-content">
-    @*    <MudPaper Elevation="0" Class="relative">
-    <MudText Class="absolute">Header</MudText>
-    <MudPaper Elevation="0" Class="absolute">
-    <MudImage Src="@(Src.Large)"
-    Fluid="true"
-    ObjectFit="ObjectFit.Contain"
-    Style="width: 100%; height: auto;" />
-
-    </MudPaper>
-    <MudText Class="absolute">Footer</MudText>
-    </MudPaper>*@
     <MudLink Href="@($"/photo/{Photo.Id}")" Style="width: 100%;">
-    <MudCard Class="relative" Elevation="0">
-        <MudCardHeader Class="item-hidden absolute pa-2" Style="width: 100%;">
-            <CardHeaderAvatar>
-                <MudAvatar Color="Color.Primary">@Photo.Photographer[0]</MudAvatar>
-            </CardHeaderAvatar>
-            <CardHeaderContent>
-                <MudText Typo="Typo.body1" Style="color: white">@Photo.Photographer</MudText>
-            </CardHeaderContent>
-            <CardHeaderActions>
-                <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Surface" />
-            </CardHeaderActions>
-        </MudCardHeader>
-        <MudImage Src="@(Photo.Src.Large)"
-                  Alt="@(Photo.Alt)"
-                  Fluid="true"
-                  ObjectFit="ObjectFit.Contain"
-                  Style="width: 100%; height: auto;" />
-        <MudCardContent Class="item-hidden absolute" Style="width: 70%; bottom: 0;">
-            <MudText Typo="Typo.body2" Style="color: white">@Photo.Alt</MudText>
-        </MudCardContent>
-        <MudCardActions Class="item-hidden absolute" Style="bottom: 0; right: 0;">
-            <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Surface" />
-            <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Surface" />
-        </MudCardActions>
-    </MudCard>
+        <MudContainer Class="relative">
+
+            <MudImage Src="@(Photo.Src.Original)"
+                      Alt="@(Photo.Alt)"
+                      Fluid="true"
+                      ObjectFit="ObjectFit.Contain"
+                      Style="width: 100%; height: auto;" />
+
+            <MudCardHeader Class="item-hidden absolute pa-2" Style="width: 100%; top: 0;">
+                <CardHeaderAvatar>
+                    <MudAvatar Style="@($"background-color: {String.Format("#{0:X6}", new Random((int)DateTime.Now.Ticks).Next(0x1000000))};")">@Photo.Photographer[0]</MudAvatar>
+                </CardHeaderAvatar>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.body1" Style="color: white;">@Photo.Photographer</MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Surface" />
+                </CardHeaderActions>
+            </MudCardHeader>
+
+            <MudCardContent Class="item-hidden absolute" Style="width: 70%; bottom: 0;">
+                <MudText Typo="Typo.body2" Style="color: white;">@Photo.Alt</MudText>
+            </MudCardContent>
+
+            <MudCardActions Class="item-hidden absolute" Style="bottom: 0; right: 0;">
+                <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Surface" />
+                <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Surface" />
+            </MudCardActions>
+
+        </MudContainer>
     </MudLink>
 </MudContainer>
 
