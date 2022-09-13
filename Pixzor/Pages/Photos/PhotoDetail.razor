@@ -4,7 +4,7 @@
     @if (Photo.Id != 0)
     {
         <MudContainer MaxWidth="MaxWidth.False">
-            <MudCardHeader Class="px-10" Style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
+            <MudCardHeader Class="px-10" Style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px -5px;">
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.h3" GutterBottom="true"><b>@(string.IsNullOrEmpty(Photo.Alt) ? "This Photo Doesn't Have Title" : Photo.Alt)</b></MudText>
                     <MudLink Href="@Photo.PhotographerUrl" Target="_blank" Underline="Underline.None" Class="d-flex ml-3" Style="align-items: baseline; gap: 20px;">
@@ -20,18 +20,18 @@
             </MudCardHeader>
             <MudCardContent Class="pa-0">
                 <MudLink Href="@(Photo.Url)" Target="_blank" Style="display: block; width: fit-content; margin: auto;">
-                    <MudImage Src="@Photo.Src.Large2x" Alt="@Photo.Alt" Style=" height: 800px;" />
+                    <MudImage Src="@Photo.Src!.Large2x" Alt="@Photo.Alt" Style=" height: 800px;" />
                 </MudLink>
             </MudCardContent>
-            <MudCardActions Style="justify-content: end; box-shadow: rgba(0, 0, 0, 0.24) 0px -3px 8px;">
+            <MudCardActions Style="justify-content: end; box-shadow: rgba(0, 0, 0, 0.24) 0px -3px 8px -5px;">
                 <MudToggleIconButton Size="Size.Large" Icon="@Icons.Filled.FavoriteBorder" Color="@Color.Primary" Title="Like"
                                  ToggledSize="Size.Large" ToggledIcon="@Icons.Filled.Favorite" ToggledColor="@Color.Primary" ToggledTitle="UnLike" />
                 <MudIconButton Link="@(Photo.Url)" Target="_blank" Size="Size.Large" Color="Color.Primary" Icon="@Icons.Filled.Download">Original</MudIconButton>
             </MudCardActions>
         </MudContainer>
     }
-
-    <PhotoGrid
+    <MudText Typo="Typo.h4" Style="margin-left: 20px; margin-bottom: 40px;">Related Photos</MudText>
+    <PhotoGrid photoPage="PhotoPage" />
 </MudContainer>
 
 @code {
@@ -39,14 +39,25 @@
     public int Id { get; set; }
 
     private Photo Photo = new();
+    private string searchText { get; set; } = string.Empty;
+    private PhotoPage PhotoPage = new();
 
     protected override async Task OnParametersSetAsync()
     {
-        Photo = await PhotoService.GetPhoto(Id);
+        await LoadPhotos();
     }
 
-    void IncrementCount()
+    private async Task LoadPhotos()
     {
+        Photo = await PhotoService.GetPhoto(Id);
+        var localStorageSearch = await localStorage.ContainKeyAsync("searchText");
+        if (localStorageSearch)
+        {
+            searchText = await localStorage.GetItemAsync<string>("searchText");
+            PhotoPage = await PhotoService.SearchPhoto(searchText);
+            return;
+        }
+        PhotoPage = await PhotoService.GetPhotos(1, 80);
 
     }
 

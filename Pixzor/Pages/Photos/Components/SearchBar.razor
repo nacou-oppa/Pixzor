@@ -59,10 +59,14 @@
     // Search
     string searchText = string.Empty;
 
-    private void NavToSearch()
+    private async Task NavToSearch()
     {
         if (string.IsNullOrWhiteSpace(searchText)) NavigationManager.NavigateTo("/");
-        else NavigationManager.NavigateTo($"/search/{searchText}");
+        else 
+        {
+            await localStorage.SetItemAsync("searchText", searchText);
+            NavigationManager.NavigateTo($"/search/{searchText}");
+        }
     }
 
     private async Task<IEnumerable<string>> SearchPhotos(string value)

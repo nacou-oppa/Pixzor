@@ -20,21 +20,21 @@
 </style>
 
 <MudContainer Class="item-container d-flex" Style="height: fit-content">
-    <MudLink Href="@($"/photo/{Photo.Id}")" Style="width: 100%;">
+    <MudLink Href="@($"/photo/{Photo?.Id}")" Style="width: 100%;">
         <MudContainer Class="relative">
 
-            <MudImage Src="@(Photo.Src.Original)"
-                      Alt="@(Photo.Alt)"
+            <MudImage Src="@(Photo?.Src?.Original)"
+                      Alt="@(Photo?.Alt)"
                       Fluid="true"
                       ObjectFit="ObjectFit.Contain"
                       Style="width: 100%; height: auto;" />
 
             <MudCardHeader Class="item-hidden absolute pa-2" Style="width: 100%; top: 0;">
                 <CardHeaderAvatar>
-                    <MudAvatar Style="@($"background-color: {String.Format("#{0:X6}", new Random((int)DateTime.Now.Ticks).Next(0x1000000))};")">@Photo.Photographer[0]</MudAvatar>
+                    <MudAvatar Style="@($"background-color: {String.Format("#{0:X6}", new Random((int)DateTime.Now.Ticks).Next(0x1000000))};")">@Photo?.Photographer[0]</MudAvatar>
                 </CardHeaderAvatar>
                 <CardHeaderContent>
-                    <MudText Typo="Typo.body1" Style="color: white;">@Photo.Photographer</MudText>
+                    <MudText Typo="Typo.body1" Style="color: white;">@Photo?.Photographer</MudText>
                 </CardHeaderContent>
                 <CardHeaderActions>
                     <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Surface" />
@@ -42,7 +42,7 @@
             </MudCardHeader>
 
             <MudCardContent Class="item-hidden absolute" Style="width: 70%; bottom: 0;">
-                <MudText Typo="Typo.body2" Style="color: white;">@Photo.Alt</MudText>
+                <MudText Typo="Typo.body2" Style="color: white;">@Photo?.Alt</MudText>
             </MudCardContent>
 
             <MudCardActions Class="item-hidden absolute" Style="bottom: 0; right: 0;">
@@ -57,5 +57,5 @@
 
 @code {
     [Parameter]
-    public Photo Photo { get; set; }
+    public Photo? Photo { get; set; }
 }

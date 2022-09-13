@@ -1,4 +1,4 @@
-﻿@if (photoPage.PerPage > 0)
+﻿@if (photoPage?.PerPage > 0)
 {
     <MudGrid Class="d-flex flex-nowrap gap-4">
 
@@ -7,8 +7,7 @@
             <MudItem Class="pa-0" md="4">
                 <MudStack Spacing="4">
                     @*<Virtualize ItemsProvider="GetCuratedPhotos" Context="photo">*@
-
-                    @foreach (var photo in photoPage.Photos.Take(photoPage.PerPage / 3))
+                    @foreach (var photo in photoPage.Photos!.Take(photoPage.PerPage / 3))
                     {
                         <PhotoItem Photo="@photo" />
                     }
@@ -17,8 +16,8 @@
             </MudItem>
             <MudItem Class="pa-0" md="4">
                 <MudStack Spacing="4">
-
-                    @foreach (var photo in photoPage.Photos.Skip(photoPage.PerPage / 3).Take((photoPage.PerPage - photoPage.PerPage / 3) / 2))
+                    @foreach (var photo in photoPage.Photos!.Skip(photoPage.PerPage / 3)
+                                                           .Take((photoPage.PerPage - photoPage.PerPage / 3) / 2))
                     {
                         <PhotoItem Photo="@photo" />
                     }
@@ -26,19 +25,56 @@
             </MudItem>
             <MudItem Class="pa-0" md="4">
                 <MudStack Spacing="4">
-                    @foreach (var photo in photoPage.Photos.TakeLast((photoPage.PerPage - photoPage.PerPage / 3) / 2))
+                    @foreach (var photo in photoPage.Photos!.TakeLast((photoPage.PerPage - photoPage.PerPage / 3) / 2))
                     {
                         <PhotoItem Photo="@photo" />
                     }
                 </MudStack>
             </MudItem>
         </MudHidden>
+
+        <!-- Hidden at md and up -->
+        <MudHidden Breakpoint="Breakpoint.Sm" Invert="true">
+            <MudItem Class="pa-0" sm="6">
+                <MudStack Spacing="4">
+                    @*<Virtualize ItemsProvider="GetCuratedPhotos" Context="photo">*@
+                    @foreach (var photo in photoPage.Photos!.Take(photoPage.PerPage / 2))
+                    {
+                        <PhotoItem Photo="@photo" />
+                    }
+                    @*</Virtualize>*@
+                </MudStack>
+            </MudItem>
+            <MudItem Class="pa-0" sm="6">
+                <MudStack Spacing="4">
+                    @foreach (var photo in photoPage.Photos!.Skip(photoPage.PerPage / 2))
+                    {
+                        <PhotoItem Photo="@photo" />
+                    }
+                </MudStack>
+            </MudItem>
+        </MudHidden>
+
+        <!-- Hidden at sm and up -->
+        <MudHidden Breakpoint="Breakpoint.SmAndUp">
+            <MudItem Class="pa-0" xs="12">
+                <MudStack Spacing="4">
+                    @*<Virtualize ItemsProvider="GetCuratedPhotos" Context="photo">*@
+                    @foreach (var photo in photoPage.Photos!)
+                    {
+                        <PhotoItem Photo="@photo" />
+                    }
+                    @*</Virtualize>*@
+                </MudStack>
+            </MudItem>
+        </MudHidden>
+        
     </MudGrid>
 }
 
 @code {
     [Parameter]
-    public PhotoPage photoPage { get; set; }
+    public PhotoPage? photoPage { get; set; }
     [Parameter]
-    public string searchText { get; set; }m 
+    public string searchText { get; set; } = string.Empty;
 }

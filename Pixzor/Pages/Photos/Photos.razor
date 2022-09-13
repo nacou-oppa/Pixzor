@@ -79,11 +79,12 @@
         "Washington", "West Virginia", "Wisconsin", "Wyoming",
     };
 
-    public PhotoPage photoPage { get; set; } = new();
-    
+    private PhotoPage photoPage { get; set; } = new();
+
     protected override async Task OnInitializedAsync()
     {
         await LoadCuratedPhotos();
+        await localStorage.RemoveItemAsync("searchText");
     }
 
     private async Task LoadCuratedPhotos()
@@ -97,7 +98,10 @@
     private void NavToSearch()
     {
         if (string.IsNullOrWhiteSpace(searchText)) NavigationManager.NavigateTo("/");
-        else NavigationManager.NavigateTo($"/search/{searchText}");
+        else 
+        {
+            NavigationManager.NavigateTo($"/search/{searchText}");
+        }
     }
 
     private async Task<IEnumerable<string>> SearchPhotos(string value)

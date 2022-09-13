@@ -100,16 +100,117 @@
         </MudContainer>
     </MudContainer>
 }
-else
+
+@if (loadPhoto)
 {
-    <h1>Nothing to Show</h1>
+    <MudContainer Class="d-flex flex-column ma-0 pa-0" MaxWidth="MaxWidth.False">
+        <MudContainer Class="home-search" MaxWidth="MaxWidth.False">
+            <MudContainer Class="d-flex flex-column gap-5"
+                      Style="position: absolute; top: 30%; left: 0; align-items: center;"
+                      MaxWidth="MaxWidth.False">
+                <MudText Style="color: #fff" Typo="Typo.h4"><b><span style="color: #E3655B;">Pixzor</span> Home Page</b></MudText>
+            </MudContainer>
+        </MudContainer>
+        <MudContainer Class="photo-container" MaxWidth="MaxWidth.False" Style="align-self: center; padding: 0 40px; margin-top: 30px;">
+
+            <MudPaper Class="d-flex align-center my-4 pr-3" Style="width: fit-content;" @onclick="() => toggleFilter = !toggleFilter">
+                <MudCheckBox @bind-Checked="toggleFilter"
+                         UncheckedIcon="@Icons.Filled.FilterList"
+                         CheckedIcon="@Icons.Filled.FilterListOff"
+                         Color="Color.Primary">
+                    <MudText Typo="Typo.h6" Color="Color.Primary">Filter</MudText>
+                </MudCheckBox>
+                @if (!string.IsNullOrEmpty(orientation) || !string.IsNullOrEmpty(size) || !string.IsNullOrEmpty(filterForm.color))
+                {
+                    <MudIconButton Class="ml-3" Icon="@Icons.Filled.Clear" Variant="Variant.Outlined" Color="Color.Primary" OnClick="() => FilterPhotos()" />
+
+                }
+            </MudPaper>
+
+            @if (toggleFilter)
+            {
+                <MudGrid Class="mb-4" Justify="Justify.Center">
+
+                    <MudItem md="4">
+                        <MudSelect T="string" Value="orientation" Label="Orientation" Placeholder="All Orientations"
+                           AnchorOrigin="Origin.BottomCenter"
+                           ValueChanged="@((e) => FilterPhotos("orientation", e))">
+
+                            <MudSelectItem Value="@("")">All Orientations</MudSelectItem>
+                            <MudSelectItem Value="@("landscape")">Horizontal</MudSelectItem>
+                            <MudSelectItem Value="@("portrait")">Vertical</MudSelectItem>
+                            <MudSelectItem Value="@("square")">Square</MudSelectItem>
+
+                        </MudSelect>
+                    </MudItem>
+
+                    <MudItem md="4">
+                        <MudSelect T="string" Value="size" Label="Size" Placeholder="All Sizes"
+                           AnchorOrigin="Origin.BottomCenter"
+                           ValueChanged="@((e) => FilterPhotos("size", e))">
+
+                            <MudSelectItem Value="@("")">All Sizes</MudSelectItem>
+                            <MudSelectItem Value="@("large")">Large</MudSelectItem>
+                            <MudSelectItem Value="@("medium")">Medium</MudSelectItem>
+                            <MudSelectItem Value="@("small")">Small</MudSelectItem>
+
+                        </MudSelect>
+                    </MudItem>
+
+                    <MudItem md="4">
+
+                            <MudColorPicker Value="@filterForm.mudColor"
+                                            ValueChanged="@((e) => FilterPhotos("color", e.Value))"
+                                            Label="Color"
+                                            Palette="CustomPalette"
+                                            ColorPickerMode="ColorPickerMode.HEX"
+                                            DisableToolbar="false"
+                                            DisableAlpha="true"
+                                            DisableModeSwitch="true"
+                                            AnchorOrigin="Origin.BottomCenter"
+                                            AdornmentColor="Color.Primary"
+                                            For="@(() => filterForm.mudColor)"/>
+                                            
+                    </MudItem>
+
+                </MudGrid>
+            }
+
+            <MudTabs Elevation="0"
+                 Rounded="true"
+                 ApplyEffectsToContainer="true"
+                 Centered="true"
+                 PanelClass="py-6"
+                 Color="Color.Surface">
+
+                <MudTabPanel Text="Tab One" Style="padding: 0;">
+                    <MudPaper><MudSkeleton SkeletonType="SkeletonType.Rectangle"/></MudPaper>
+                </MudTabPanel>
+
+                <MudTabPanel Text="Tab Two">
+                    <MudText></MudText>
+                </MudTabPanel>
+
+                <MudTabPanel Text="Tab Three">
+                    <MudText>Content Three</MudText>
+                </MudTabPanel>
+
+            </MudTabs>
+        </MudContainer>
+    </MudContainer>
+}
+
+@if (PhotoPage.Photos != null && PhotoPage.Photos.Count == 0) 
+{
+    <MudText Typo="Typo.caption">Can not find the photo mean: @SearchText</MudText>
 }
 
 @code {
     [Parameter]
-    public string SearchText { get; set; }
+    public string SearchText { get; set; } = string.Empty;
 
     PhotoPage PhotoPage = new();
+    private bool loadPhoto = true;
 
     // Filter
     public bool toggleFilter { get; set; }
@@ -121,9 +222,14 @@ else
     protected override async Task OnParametersSetAsync()
     {
         await LoadSearchedPhotos();
+        await localStorage.SetItemAsync("searchText", SearchText);
     }
 
-    private async Task LoadSearchedPhotos() => PhotoPage = await PhotoService.SearchPhoto(SearchText, 1);
+    private async Task LoadSearchedPhotos()
+    {
+        PhotoPage = await PhotoService.SearchPhoto(SearchText, 1);
+        if (PhotoPage.Photos != null) loadPhoto = false;
+    }
 
     private async Task FilterPhotos(string type = "clear", string e = "")
     {
