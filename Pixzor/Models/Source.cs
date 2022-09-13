@@ -1,14 +1,14 @@
 ﻿namespace Pixzor.Models
 {
-    public class Source
+    public sealed class Source
     {
-        public string Original { get; set; }
-        public string Large2x { get; set; }
-        public string Large { get; set; }
-        public string Medium { get; set; }
-        public string Small { get; set; }
-        public string Portrait { get; set; }
-        public string Landscape { get; set; }
-        public string Tiny { get; set; }
+        public string Original { get; set; } = string.Empty;
+        public string Large2x { get; set; } = string.Empty;
+        public string Large { get; set; } = string.Empty;
+        public string Medium { get; set; } = string.Empty;
+        public string Small { get; set; } = string.Empty;
+        public string Portrait { get; set; } = string.Empty;
+        public string Landscape { get; set; } = string.Empty;
+        public string Tiny { get; set; } = string.Empty;
     }
 }
