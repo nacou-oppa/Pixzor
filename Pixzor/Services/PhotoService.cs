@@ -1,6 +1,6 @@
 ﻿namespace Pixzor.Services
 {
-    public class PhotoService : IPhotoService
+    internal sealed class PhotoService : IPhotoService
     {
         private readonly HttpClient _httpClient;
 
@@ -14,13 +14,13 @@
         public async Task<Photo> GetPhoto(int id)
         {
             var photo = await _httpClient.GetFromJsonAsync<Photo>($"photos/{id}");
-            return photo;
+            return photo!;
         }
 
-        public async Task<PhotoPage> GetPhotos(int page = 1, int perPage = 15)
+        public async Task<PhotoPage> GetPhotos(int page = 1, int perPage = 80)
         {
             var photoPage = await _httpClient.GetFromJsonAsync<PhotoPage>($"curated?page={page}&per_page={perPage}");
-            return photoPage;
+            return photoPage!;
         }
 
         public async Task<PhotoPage> SearchPhoto(string query, int page = 1, int perPage = 0, string orientation = "", string size = "", string color = "", string local = "")
@@ -40,7 +40,7 @@
 
             requestUri += $"&page={page}";
 
-            Photos = await _httpClient.GetFromJsonAsync<PhotoPage>(requestUri);
+            Photos = await _httpClient.GetFromJsonAsync<PhotoPage>(requestUri) ?? new PhotoPage();
 
             return Photos;
         }
