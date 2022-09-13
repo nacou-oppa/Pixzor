@@ -1,6 +1,6 @@
 ﻿namespace Pixzor.Models
 {
-    public class VideoPicture
+    public sealed class VideoPicture
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }

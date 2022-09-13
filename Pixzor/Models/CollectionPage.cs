@@ -1,6 +1,6 @@
 ﻿namespace Pixzor.Models
 {
-    public class CollectionPage
+    public sealed class CollectionPage
     {
         [JsonPropertyName("collections")]
         public List<Collection>? Collections { get; set; }
