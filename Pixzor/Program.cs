@@ -25,6 +25,8 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddMudServices();
 
 builder.Services.AddScoped<IPhotoService, PhotoService>();
+builder.Services.AddScoped<IVideoService, VideoService>();
+builder.Services.AddScoped<ICollectionService, CollectionService>();
 
 /* Pexel API */
 builder.Services.AddHttpClient("PexelPhoto", client =>

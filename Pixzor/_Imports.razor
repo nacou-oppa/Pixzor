@@ -15,6 +15,7 @@
 
 @using MudBlazor.Utilities
 @using System.Web
+@using System.Text.Json
 
 @*Components*@
 @using Pixzor.Pages.Photos.Components
@@ -23,3 +24,5 @@
 @inject IHttpClientFactory ClientFactory
 @inject NavigationManager NavigationManager
 @inject IPhotoService PhotoService
+@inject IVideoService VideoService
+@inject ICollectionService CollectionService

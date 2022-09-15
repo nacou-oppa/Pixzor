@@ -23,13 +23,13 @@ namespace Pixzor.Services
         {
             string requestUri = $"popular?page={page}&per_page={perPage}";
 
-            if (!string.IsNullOrWhiteSpace(minWidth))
+            if (minWidth is not null)
                 requestUri += $"&min_width={minWidth}";
-            if (!string.IsNullOrWhiteSpace(minHeight))
+            if (minHeight is not null)
                 requestUri += $"&min_height={minHeight}";
-            if (!string.IsNullOrWhiteSpace(minDuration))
+            if (minDuration is not null)
                 requestUri += $"&min_duration={minDuration}";
-            if (!string.IsNullOrWhiteSpace(maxDuration))
+            if (maxDuration is not null)
                 requestUri += $"&max_duration={maxDuration}";
 
             var result = await _httpClient.GetFromJsonAsync<VideoPage>(requestUri);
