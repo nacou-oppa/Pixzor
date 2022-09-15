@@ -1,4 +1,6 @@
-﻿<style> 
+﻿@inject HttpClient httpClient
+
+<style>
     form {
         display: flex;
         width: 60%;
@@ -11,6 +13,7 @@
                      @bind-Value="@searchText"
                      SearchFunc="SearchPhotos"
                      OnAdornmentClick="NavToSearch"
+                     MaxItems=5
                      Label="Search"
                      CoerceValue="true"
                      ResetValueOnEmptyText="true"
@@ -19,51 +22,82 @@
                      AdornmentIcon="@Icons.Filled.Search"
                      AdornmentColor="Color.Primary"
                      Style="background-color: white;">
+
         <MoreItemsTemplate>
-            <MudText Align="Align.Center" Class="px-4 py-1">
-                Only the first 10 items are shown
-            </MudText>
+            <MudStack>
+            <MudText>Recent Search@(recent.Count() > 1 ? "es" : "")</MudText>
+            @if (recent.Count() > 0)
+            {
+                @foreach (var item in recent)
+                {
+                    <MudText Align="Align.Center" Class="px-4 py-1">
+                        @item
+                    </MudText>
+                }
+            }
+            </MudStack>
+            <MudStack>
+                <MudText>Recent Search@(recent.Count() > 1 ? "es" : "")</MudText>
+                @if (recent.Count() > 0)
+                {
+                    @foreach (var item in recent)
+                    {
+                        <MudText Align="Align.Center" Class="px-4 py-1">
+                            @item
+                        </MudText>
+                    }
+                }
+            </MudStack>
+
         </MoreItemsTemplate>
 
-        <NoItemsTemplate>
-            <MudText Align="Align.Center" Class="px-4 py-1">
-                No items found
-            </MudText>
-        </NoItemsTemplate>
 
+        <NoItemsTemplate>
+            @if (recent.Count() > 0)
+            {
+                @foreach (var item in recent)
+                {
+                    <MudText Align="Align.Center" Class="px-4 py-1">
+                        @item
+                    </MudText>
+                }
+            }
+        </NoItemsTemplate>
     </MudAutocomplete>
 </EditForm>
 
 @code {
     //EditForm
-    string search = string.Empty;
+    private string search = string.Empty;
+    private List<string> recent = new();
 
-    private string[] states =
+    private List<string> suggestion = new();
+
+    protected override async Task OnInitializedAsync()
     {
-        "Alabama", "Alaska", "American Samoa", "Arizona",
-        "Arkansas", "California", "Colorado", "Connecticut",
-        "Delaware", "District of Columbia", "Federated States of Micronesia",
-        "Florida", "Georgia", "Guam", "Hawaii", "Idaho",
-        "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
-        "Louisiana", "Maine", "Marshall Islands", "Maryland",
-        "Massachusetts", "Michigan", "Minnesota", "Mississippi",
-        "Missouri", "Montana", "Nebraska", "Nevada",
-        "New Hampshire", "New Jersey", "New Mexico", "New York",
-        "North Carolina", "North Dakota", "Northern Mariana Islands", "Ohio",
-        "Oklahoma", "Oregon", "Palau", "Pennsylvania", "Puerto Rico",
-        "Rhode Island", "South Carolina", "South Dakota", "Tennessee",
-        "Texas", "Utah", "Vermont", "Virgin Island", "Virginia",
-        "Washington", "West Virginia", "Wisconsin", "Wyoming",
-    };
-    
+        await LoadSuggestion();
+    }
+
+    private async Task LoadSuggestion()
+    {
+        // Random words api form heroku
+        var words = await httpClient.GetFromJsonAsync<string[]>("https://random-word-api.herokuapp.com/all");
+        suggestion.AddRange(words!);
+        var containRecent = await localStorage.ContainKeyAsync("recentSearch");
+        if (containRecent) recent = await localStorage.GetItemAsync<List<string>>("recentSearch");
+        Console.WriteLine(recent.First());
+    }
+
     // Search
     string searchText = string.Empty;
 
     private async Task NavToSearch()
     {
         if (string.IsNullOrWhiteSpace(searchText)) NavigationManager.NavigateTo("/");
-        else 
+        else
         {
+            if (!recent.Contains(searchText)) recent.Add(searchText);
+            await localStorage.SetItemAsync("recentSearch", recent);
             await localStorage.SetItemAsync("searchText", searchText);
             NavigationManager.NavigateTo($"/search/{searchText}");
         }
@@ -73,10 +107,9 @@
     {
         // In real life use an asynchronous function for fetching data from an api.
         await Task.Delay(5);
-
         // if text is null or empty, don't return values (drop-down will not open)
         if (string.IsNullOrEmpty(value))
             return new string[0];
-        return states.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+        return suggestion.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Take(6);
     }
 }
