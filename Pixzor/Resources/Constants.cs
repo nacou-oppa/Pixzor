@@ -4,6 +4,8 @@
     {
         public const string BASE_URL = "https://api.pexels.com/v1/";
         public const string VIDEO_BASE_URL = "https://api.pexels.com/videos/";
-        public const string API_KEY = "563492ad6f91700001000001f14055bafe18434ead839ea5c8095240";
+
+        //public const string API_KEY = "563492ad6f91700001000001f14055bafe18434ead839ea5c8095240";
+        public const string API_KEY = "563492ad6f91700001000001f84a6db228ab4062b35a403b44a171c8";
     }
 }

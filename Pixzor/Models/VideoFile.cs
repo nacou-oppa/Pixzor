@@ -12,10 +12,10 @@
         public string FileType { get; set; } = string.Empty;
 
         [JsonPropertyName("width")]
-        public string Width { get; set; } = string.Empty;
+        public int Width { get; set; }
 
         [JsonPropertyName("height")]
-        public string Height { get; set; } = string.Empty;
+        public int Height { get; set; }
 
         [JsonPropertyName("link")]
         public string Link { get; set; } = string.Empty;
