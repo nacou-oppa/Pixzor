@@ -58,7 +58,7 @@
         [JsonPropertyName("video_files")]
         public List<VideoFile>? VideoFiles { get; set; }
 
-        [JsonPropertyName("video_picture")]
+        [JsonPropertyName("video_pictures")]
         public List<VideoPicture>? VideoPictures { get; set; }
     }
 }
