@@ -5,13 +5,7 @@
 @if (PhotoPage.Photos != null && PhotoPage.Photos.Count > 0)
 {
     <MudContainer Class="d-flex flex-column ma-0 pa-0" MaxWidth="MaxWidth.False">
-        <MudContainer Class="home-search" MaxWidth="MaxWidth.False">
-            <MudContainer Class="d-flex flex-column gap-5"
-                      Style="position: absolute; top: 30%; left: 0; align-items: center;"
-                      MaxWidth="MaxWidth.False">
-                <MudText Style="color: #fff" Typo="Typo.h4"><b><span style="color: #E3655B;">Pixzor</span> Home Page</b></MudText>
-            </MudContainer>
-        </MudContainer>
+
         <MudContainer Class="photo-container" MaxWidth="MaxWidth.False" Style="align-self: center; padding: 0 40px; margin-top: 30px;">
 
             <MudPaper Class="d-flex align-center my-4 pr-3" Style="width: fit-content;" @onclick="() => toggleFilter = !toggleFilter">
@@ -60,18 +54,18 @@
 
                     <MudItem md="4">
 
-                            <MudColorPicker Value="@filterForm.mudColor"
-                                            ValueChanged="@((e) => FilterPhotos("color", e.Value))"
-                                            Label="Color"
-                                            Palette="CustomPalette"
-                                            ColorPickerMode="ColorPickerMode.HEX"
-                                            DisableToolbar="false"
-                                            DisableAlpha="true"
-                                            DisableModeSwitch="true"
-                                            AnchorOrigin="Origin.BottomCenter"
-                                            AdornmentColor="Color.Primary"
-                                            For="@(() => filterForm.mudColor)"/>
-                                            
+                        <MudColorPicker Value="@filterForm.mudColor"
+                                ValueChanged="@((e) => FilterPhotos("color", e.Value))"
+                                Label="Color"
+                                Palette="CustomPalette"
+                                ColorPickerMode="ColorPickerMode.HEX"
+                                DisableToolbar="false"
+                                DisableAlpha="true"
+                                DisableModeSwitch="true"
+                                AnchorOrigin="Origin.BottomCenter"
+                                AdornmentColor="Color.Primary"
+                                For="@(() => filterForm.mudColor)" />
+
                     </MudItem>
 
                 </MudGrid>
@@ -104,13 +98,7 @@
 @if (loadPhoto)
 {
     <MudContainer Class="d-flex flex-column ma-0 pa-0" MaxWidth="MaxWidth.False">
-        <MudContainer Class="home-search" MaxWidth="MaxWidth.False">
-            <MudContainer Class="d-flex flex-column gap-5"
-                      Style="position: absolute; top: 30%; left: 0; align-items: center;"
-                      MaxWidth="MaxWidth.False">
-                <MudText Style="color: #fff" Typo="Typo.h4"><b><span style="color: #E3655B;">Pixzor</span> Home Page</b></MudText>
-            </MudContainer>
-        </MudContainer>
+        
         <MudContainer Class="photo-container" MaxWidth="MaxWidth.False" Style="align-self: center; padding: 0 40px; margin-top: 30px;">
 
             <MudPaper Class="d-flex align-center my-4 pr-3" Style="width: fit-content;" @onclick="() => toggleFilter = !toggleFilter">
@@ -125,6 +113,12 @@
                     <MudIconButton Class="ml-3" Icon="@Icons.Filled.Clear" Variant="Variant.Outlined" Color="Color.Primary" OnClick="() => FilterPhotos()" />
 
                 }
+                <MudPagination Color="Color.Primary"
+                               Rectangular="true"
+                               Variant="Variant.Text"
+                           Count="@(Convert.ToInt32(Math.Ceiling((double)PhotoPage.TotalResults / 80D)))"
+                               Style="align-self: center;"
+                               SelectedChanged="async (i) => await PageChange(i)" />
             </MudPaper>
 
             @if (toggleFilter)
@@ -159,18 +153,18 @@
 
                     <MudItem md="4">
 
-                            <MudColorPicker Value="@filterForm.mudColor"
-                                            ValueChanged="@((e) => FilterPhotos("color", e.Value))"
-                                            Label="Color"
-                                            Palette="CustomPalette"
-                                            ColorPickerMode="ColorPickerMode.HEX"
-                                            DisableToolbar="false"
-                                            DisableAlpha="true"
-                                            DisableModeSwitch="true"
-                                            AnchorOrigin="Origin.BottomCenter"
-                                            AdornmentColor="Color.Primary"
-                                            For="@(() => filterForm.mudColor)"/>
-                                            
+                        <MudColorPicker Value="@filterForm.mudColor"
+                                ValueChanged="@((e) => FilterPhotos("color", e.Value))"
+                                Label="Color"
+                                Palette="CustomPalette"
+                                ColorPickerMode="ColorPickerMode.HEX"
+                                DisableToolbar="false"
+                                DisableAlpha="true"
+                                DisableModeSwitch="true"
+                                AnchorOrigin="Origin.BottomCenter"
+                                AdornmentColor="Color.Primary"
+                                For="@(() => filterForm.mudColor)" />
+
                     </MudItem>
 
                 </MudGrid>
@@ -184,7 +178,7 @@
                  Color="Color.Surface">
 
                 <MudTabPanel Text="Tab One" Style="padding: 0;">
-                    <MudPaper><MudSkeleton SkeletonType="SkeletonType.Rectangle"/></MudPaper>
+                    <MudPaper><MudSkeleton SkeletonType="SkeletonType.Rectangle" /></MudPaper>
                 </MudTabPanel>
 
                 <MudTabPanel Text="Tab Two">
@@ -200,7 +194,7 @@
     </MudContainer>
 }
 
-@if (PhotoPage.Photos != null && PhotoPage.Photos.Count == 0) 
+@if (PhotoPage.Photos != null && PhotoPage.Photos.Count == 0)
 {
     <MudText Typo="Typo.caption">Can not find the photo mean: @SearchText</MudText>
 }
@@ -233,7 +227,7 @@
 
     private async Task FilterPhotos(string type = "clear", string e = "")
     {
-        if(type.Equals("clear"))
+        if (type.Equals("clear"))
         {
             orientation = string.Empty;
             size = string.Empty;
@@ -246,14 +240,19 @@
         {
             if (type.Equals("orientation")) orientation = e;
             if (type.Equals("size")) size = e;
-            if (type.Equals("color")) 
+            if (type.Equals("color"))
             {
                 filterForm.mudColor = new MudColor(e);
                 filterForm.color = HttpUtility.UrlEncode(filterForm.mudColor.Value.Substring(0, 7));
             }
-
+            
             PhotoPage = await PhotoService.SearchPhoto(SearchText, 1, 0, orientation, size, filterForm.color);
         }
+    }
+
+    private async Task PageChange(int index)
+    {
+        PhotoPage = await PhotoService.SearchPhoto(SearchText, index, 0, orientation, size, filterForm.color);
     }
 
 
