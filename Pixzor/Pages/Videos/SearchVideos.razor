@@ -1,0 +1,283 @@
+﻿@page "/video/search/{SearchText}"
+
+<PageTitle>Pixzor - Search</PageTitle>
+
+@if (VideoPage.Videos != null && VideoPage.Videos.Count > 0)
+{
+        <MudContainer Class="d-flex flex-column ma-0 pa-0" MaxWidth="MaxWidth.False">
+
+            <MudContainer Class="photo-container" MaxWidth="MaxWidth.False" Style="align-self: center; padding: 0 40px; margin-top: 30px;">
+                <MudStack Row="true" AlignItems="AlignItems.Baseline">
+                    <MudPaper Class="d-flex align-center my-4 pr-3" Style="width: fit-content;" @onclick="() => toggleFilter = !toggleFilter">
+                        <MudCheckBox @bind-Checked="toggleFilter"
+                             UncheckedIcon="@Icons.Filled.FilterList"
+                             CheckedIcon="@Icons.Filled.FilterListOff"
+                             Color="Color.Primary">
+                            <MudText Typo="Typo.h6" Color="Color.Primary">Filter</MudText>
+                        </MudCheckBox>
+                    @if (!string.IsNullOrEmpty(orientation) || !string.IsNullOrEmpty(size) || !string.IsNullOrEmpty(filterForm.color))
+                    {
+                                <MudIconButton Class="ml-3" Icon="@Icons.Filled.Clear" Variant="Variant.Outlined" Color="Color.Primary" OnClick="() => FilterVideos()" />
+
+                    }
+                    </MudPaper>
+
+                    <MudText Color="Color.Primary" Class="ml-auto"><b>Search: @SearchText</b></MudText>
+
+                    <MudText Color="Color.Primary"><b>Total Results: @VideoPage.TotalResults</b></MudText>
+
+                </MudStack>
+
+            @if (toggleFilter)
+            {
+                        <MudGrid Class="mb-4" Justify="Justify.Center">
+
+                            <MudItem md="4">
+                                <MudSelect T="string" Value="orientation" Label="Orientation" Placeholder="All Orientations"
+                           AnchorOrigin="Origin.BottomCenter"
+                           ValueChanged="@((e) => FilterVideos("orientation", e))">
+
+                                    <MudSelectItem Value="@("")">All Orientations</MudSelectItem>
+                                    <MudSelectItem Value="@("landscape")">Horizontal</MudSelectItem>
+                                    <MudSelectItem Value="@("portrait")">Vertical</MudSelectItem>
+                                    <MudSelectItem Value="@("square")">Square</MudSelectItem>
+
+                                </MudSelect>
+                            </MudItem>
+
+                            <MudItem md="4">
+                                <MudSelect T="string" Value="size" Label="Size" Placeholder="All Sizes"
+                           AnchorOrigin="Origin.BottomCenter"
+                           ValueChanged="@((e) => FilterVideos("size", e))">
+
+                                    <MudSelectItem Value="@("")">All Sizes</MudSelectItem>
+                                    <MudSelectItem Value="@("large")">Large</MudSelectItem>
+                                    <MudSelectItem Value="@("medium")">Medium</MudSelectItem>
+                                    <MudSelectItem Value="@("small")">Small</MudSelectItem>
+
+                                </MudSelect>
+                            </MudItem>
+
+                            <MudItem md="4">
+
+                                <MudColorPicker Value="@filterForm.mudColor"
+                                ValueChanged="@((e) => FilterVideos("color", e.Value))"
+                                Label="Color"
+                                Palette="CustomPalette"
+                                ColorPickerMode="ColorPickerMode.HEX"
+                                DisableToolbar="false"
+                                DisableAlpha="true"
+                                DisableModeSwitch="true"
+                                AnchorOrigin="Origin.BottomCenter"
+                                AdornmentColor="Color.Primary"
+                                For="@(() => filterForm.mudColor)" />
+
+                            </MudItem>
+
+                        </MudGrid>
+            }
+
+                <MudTabs Elevation="0"
+                 Rounded="true"
+                 ApplyEffectsToContainer="true"
+                 Centered="true"
+                 PanelClass="py-6"
+                 Color="Color.Surface">
+
+                    <MudTabPanel Text="Photos" Style="padding: 0;">
+                        <MudPagination Color="Color.Primary"
+                               Rectangular="true"
+                               Variant="Variant.Text"
+                               Count="@(Convert.ToInt32(Math.Ceiling((double)VideoPage.TotalResults / 80D)))"
+                               Style="align-self: center;"
+                               SelectedChanged="async (i) => await PageChange(i)" />
+
+                        <PhotoGrid VideoPage="@VideoPage" searchText="@SearchText" />
+
+                        <MudPagination Color="Color.Primary"
+                               Rectangular="true"
+                               Variant="Variant.Text"
+                               Count="@(Convert.ToInt32(Math.Ceiling((double)VideoPage.TotalResults / 80D)))"
+                               Style="align-self: center;"
+                               SelectedChanged="async (i) => await PageChange(i)" />
+                    </MudTabPanel>
+
+                </MudTabs>
+            </MudContainer>
+        </MudContainer>
+}
+
+@if (loadVideo)
+{
+        <MudContainer Class="d-flex flex-column ma-0 pa-0" MaxWidth="MaxWidth.False">
+
+            <MudContainer Class="photo-container" MaxWidth="MaxWidth.False" Style="align-self: center; padding: 0 40px; margin-top: 30px;">
+
+                <MudPaper Class="d-flex align-center my-4 pr-3" Style="width: fit-content;" @onclick="() => toggleFilter = !toggleFilter">
+                    <MudCheckBox @bind-Checked="toggleFilter"
+                         UncheckedIcon="@Icons.Filled.FilterList"
+                         CheckedIcon="@Icons.Filled.FilterListOff"
+                         Color="Color.Primary">
+                        <MudText Typo="Typo.h6" Color="Color.Primary">Filter</MudText>
+                    </MudCheckBox>
+                @if (!string.IsNullOrEmpty(orientation) || !string.IsNullOrEmpty(size) || !string.IsNullOrEmpty(filterForm.color))
+                {
+                            <MudIconButton Class="ml-3" Icon="@Icons.Filled.Clear" Variant="Variant.Outlined" Color="Color.Primary" OnClick="() => FilterVideos()" />
+
+                }
+                    <MudPagination Color="Color.Primary"
+                           Rectangular="true"
+                           Variant="Variant.Text"
+                           Count="@(Convert.ToInt32(Math.Ceiling((double)VideoPage.TotalResults / 80D)))"
+                           Style="align-self: center;"
+                           SelectedChanged="async (i) => await PageChange(i)" />
+                </MudPaper>
+
+            @if (toggleFilter)
+            {
+                        <MudGrid Class="mb-4" Justify="Justify.Center">
+
+                            <MudItem md="4">
+                                <MudSelect T="string" Value="orientation" Label="Orientation" Placeholder="All Orientations"
+                           AnchorOrigin="Origin.BottomCenter"
+                           ValueChanged="@((e) => FilterVideos("orientation", e))">
+
+                                    <MudSelectItem Value="@("")">All Orientations</MudSelectItem>
+                                    <MudSelectItem Value="@("landscape")">Horizontal</MudSelectItem>
+                                    <MudSelectItem Value="@("portrait")">Vertical</MudSelectItem>
+                                    <MudSelectItem Value="@("square")">Square</MudSelectItem>
+
+                                </MudSelect>
+                            </MudItem>
+
+                            <MudItem md="4">
+                                <MudSelect T="string" Value="size" Label="Size" Placeholder="All Sizes"
+                           AnchorOrigin="Origin.BottomCenter"
+                           ValueChanged="@((e) => FilterVideos("size", e))">
+
+                                    <MudSelectItem Value="@("")">All Sizes</MudSelectItem>
+                                    <MudSelectItem Value="@("large")">Large</MudSelectItem>
+                                    <MudSelectItem Value="@("medium")">Medium</MudSelectItem>
+                                    <MudSelectItem Value="@("small")">Small</MudSelectItem>
+
+                                </MudSelect>
+                            </MudItem>
+
+                            <MudItem md="4">
+
+                                <MudColorPicker Value="@filterForm.mudColor"
+                                ValueChanged="@((e) => FilterVideos("color", e.Value))"
+                                Label="Color"
+                                Palette="CustomPalette"
+                                ColorPickerMode="ColorPickerMode.HEX"
+                                DisableToolbar="false"
+                                DisableAlpha="true"
+                                DisableModeSwitch="true"
+                                AnchorOrigin="Origin.BottomCenter"
+                                AdornmentColor="Color.Primary"
+                                For="@(() => filterForm.mudColor)" />
+
+                            </MudItem>
+
+                        </MudGrid>
+            }
+
+                <MudTabs Elevation="0"
+                 Rounded="true"
+                 ApplyEffectsToContainer="true"
+                 Centered="true"
+                 PanelClass="py-6"
+                 Color="Color.Surface">
+
+                    <MudTabPanel Text="Photos" Style="padding: 0;">
+                        <MudPaper><MudSkeleton SkeletonType="SkeletonType.Rectangle" /></MudPaper>
+                    </MudTabPanel>
+
+                </MudTabs>
+            </MudContainer>
+        </MudContainer>
+}
+
+@if (VideoPage.Videos != null && VideoPage.Videos.Count == 0)
+{
+        <MudText Typo="Typo.caption">Can not find the photo mean: @SearchText</MudText>
+}
+
+@code {
+    [Parameter]
+    public string SearchText { get; set; } = string.Empty;
+
+    VideoPage VideoPage = new();
+    private bool loadVideo = true;
+
+    // Filter
+    public bool toggleFilter { get; set; }
+    public string orientation { get; set; } = string.Empty;
+    public string size { get; set; } = string.Empty;
+
+    FilterForm filterForm = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadSearchedVideos();
+    }
+
+    private async Task LoadSearchedVideos()
+    {
+        VideoPage = await VideoService.SearchVideos(SearchText);
+        if (VideoPage.Videos != null) loadVideo = false;
+        await localStorage.SetItemAsync("searchText", SearchText);
+
+    }
+
+    private async Task FilterVideos(string type = "clear", string e = "")
+    {
+        if (type.Equals("clear"))
+        {
+            orientation = string.Empty;
+            size = string.Empty;
+            filterForm.mudColor = new("#E3655B");
+            filterForm.color = string.Empty;
+
+            VideoPage = await VideoService.SearchVideos(SearchText, 1, 80, orientation, size, filterForm.color);
+        }
+        else
+        {
+            if (type.Equals("orientation")) orientation = e;
+            if (type.Equals("size")) size = e;
+            if (type.Equals("color"))
+            {
+                filterForm.mudColor = new MudColor(e);
+                filterForm.color = HttpUtility.UrlEncode(filterForm.mudColor.Value.Substring(0, 7));
+            }
+
+            VideoPage = await VideoService.SearchVideos(SearchText, 1, 80, orientation, size, filterForm.color);
+        }
+    }
+
+    private async Task PageChange(int index)
+    {
+        VideoPage = await VideoService.SearchVideos(SearchText, index, 80, orientation, size, filterForm.color);
+    }
+
+
+    // Photo Color
+    public IEnumerable<MudColor> CustomPalette { get; set; } = new MudColor[]
+    {
+        "#F44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5",
+        "#FFEBEE", "#FCE4EC", "#F3E5F5", "#EDE7F6", "#E8EAF6",
+        "#FFCDD2", "#F8BBD0", "#E1BEE7", "#D1C4E9", "#C5CAE9",
+        "#EF9A9A", "#F48FB1", "#CE93D8", "#B39DDB", "#9FA8DA",
+        "#E57373", "#F06292", "#BA68C8", "#9575CD", "#7986CB",
+        "#EF5350", "#EC407A", "#AB47BC", "#7E57C2", "#5C6BC0",
+        "#E53935", "#D81B60", "#8E24AA", "#5E35B1", "#3949AB"
+    };
+
+    // Search validate model
+    public class FilterForm
+    {
+        public string color { get; set; } = "";
+
+        public MudColor mudColor { get; set; } = new("#E3655B");
+    }
+}
