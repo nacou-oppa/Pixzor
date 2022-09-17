@@ -8,6 +8,6 @@
 
         Task<PhotoPage> GetPhotos(int page = 1, int perPage = 80);
 
-        Task<PhotoPage> SearchPhoto(string query, int page = 1, int perPage = 0, string orientation = "", string size = "", string color = "", string local = "");
+        Task<PhotoPage> SearchPhoto(string query, int page = 1, int perPage = 80, string orientation = "", string size = "", string color = "", string local = "");
     }
 }

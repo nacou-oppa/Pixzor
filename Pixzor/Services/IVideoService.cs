@@ -10,6 +10,6 @@ namespace Pixzor.Services
 
         Task<Video> GetVideo(int id);
 
-        Task<VideoPage> SearchVideos(string query = "", int page = 1, int perPage = 0, string orientation = "", string size = "", string local = "");
+        Task<VideoPage> SearchVideos(string query, int page = 1, int perPage = 80, string orientation = "", string size = "", string local = "");
     }
 }

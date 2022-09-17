@@ -23,7 +23,7 @@
             return photoPage!;
         }
 
-        public async Task<PhotoPage> SearchPhoto(string query, int page = 1, int perPage = 0, string orientation = "", string size = "", string color = "", string local = "")
+        public async Task<PhotoPage> SearchPhoto(string query, int page = 1, int perPage = 80, string orientation = "", string size = "", string color = "", string local = "")
         {
             string requestUri = $"search?query={query}";
 

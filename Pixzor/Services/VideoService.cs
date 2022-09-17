@@ -36,7 +36,7 @@ namespace Pixzor.Services
             return result ?? new VideoPage();
         }
 
-        public async Task<VideoPage> SearchVideos(string query = "", int page = 1, int perPage = 0, string orientation = "", string size = "", string local = "")
+        public async Task<VideoPage> SearchVideos(string query, int page = 1, int perPage = 80, string orientation = "", string size = "", string local = "")
         {
             string requestUri = $"videos/search?query={query}&page={page}";
 
