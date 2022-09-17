@@ -1,4 +1,4 @@
-﻿@page "/search/{SearchText}"
+﻿@page "/photo/search/{SearchText}"
 
 <PageTitle>Pixzor - Search</PageTitle>
 
@@ -7,20 +7,26 @@
     <MudContainer Class="d-flex flex-column ma-0 pa-0" MaxWidth="MaxWidth.False">
 
         <MudContainer Class="photo-container" MaxWidth="MaxWidth.False" Style="align-self: center; padding: 0 40px; margin-top: 30px;">
+            <MudStack Row="true" AlignItems="AlignItems.Baseline">
+                <MudPaper Class="d-flex align-center my-4 pr-3" Style="width: fit-content;" @onclick="() => toggleFilter = !toggleFilter">
+                    <MudCheckBox @bind-Checked="toggleFilter"
+                             UncheckedIcon="@Icons.Filled.FilterList"
+                             CheckedIcon="@Icons.Filled.FilterListOff"
+                             Color="Color.Primary">
+                        <MudText Typo="Typo.h6" Color="Color.Primary">Filter</MudText>
+                    </MudCheckBox>
+                    @if (!string.IsNullOrEmpty(orientation) || !string.IsNullOrEmpty(size) || !string.IsNullOrEmpty(filterForm.color))
+                    {
+                        <MudIconButton Class="ml-3" Icon="@Icons.Filled.Clear" Variant="Variant.Outlined" Color="Color.Primary" OnClick="() => FilterPhotos()" />
 
-            <MudPaper Class="d-flex align-center my-4 pr-3" Style="width: fit-content;" @onclick="() => toggleFilter = !toggleFilter">
-                <MudCheckBox @bind-Checked="toggleFilter"
-                         UncheckedIcon="@Icons.Filled.FilterList"
-                         CheckedIcon="@Icons.Filled.FilterListOff"
-                         Color="Color.Primary">
-                    <MudText Typo="Typo.h6" Color="Color.Primary">Filter</MudText>
-                </MudCheckBox>
-                @if (!string.IsNullOrEmpty(orientation) || !string.IsNullOrEmpty(size) || !string.IsNullOrEmpty(filterForm.color))
-                {
-                    <MudIconButton Class="ml-3" Icon="@Icons.Filled.Clear" Variant="Variant.Outlined" Color="Color.Primary" OnClick="() => FilterPhotos()" />
+                    }
+                </MudPaper>
 
-                }
-            </MudPaper>
+                <MudText Color="Color.Primary" Class="ml-auto"><b>Search: @SearchText</b></MudText>
+
+                <MudText Color="Color.Primary"><b>Total Results: @PhotoPage.TotalResults</b></MudText>
+
+            </MudStack>
 
             @if (toggleFilter)
             {
@@ -78,16 +84,22 @@
                  PanelClass="py-6"
                  Color="Color.Surface">
 
-                <MudTabPanel Text="Tab One" Style="padding: 0;">
+                <MudTabPanel Text="Photos" Style="padding: 0;">
+                    <MudPagination Color="Color.Primary"
+                               Rectangular="true"
+                               Variant="Variant.Text"
+                               Count="@(Convert.ToInt32(Math.Ceiling((double)PhotoPage.TotalResults / 80D)))"
+                               Style="align-self: center;"
+                               SelectedChanged="async (i) => await PageChange(i)" />
+
                     <PhotoGrid photoPage="@PhotoPage" searchText="@SearchText" />
-                </MudTabPanel>
 
-                <MudTabPanel Text="Tab Two">
-                    <MudText></MudText>
-                </MudTabPanel>
-
-                <MudTabPanel Text="Tab Three">
-                    <MudText>Content Three</MudText>
+                    <MudPagination Color="Color.Primary"
+                               Rectangular="true"
+                               Variant="Variant.Text"
+                               Count="@(Convert.ToInt32(Math.Ceiling((double)PhotoPage.TotalResults / 80D)))"
+                               Style="align-self: center;"
+                               SelectedChanged="async (i) => await PageChange(i)" />
                 </MudTabPanel>
 
             </MudTabs>
@@ -98,7 +110,7 @@
 @if (loadPhoto)
 {
     <MudContainer Class="d-flex flex-column ma-0 pa-0" MaxWidth="MaxWidth.False">
-        
+
         <MudContainer Class="photo-container" MaxWidth="MaxWidth.False" Style="align-self: center; padding: 0 40px; margin-top: 30px;">
 
             <MudPaper Class="d-flex align-center my-4 pr-3" Style="width: fit-content;" @onclick="() => toggleFilter = !toggleFilter">
@@ -114,11 +126,11 @@
 
                 }
                 <MudPagination Color="Color.Primary"
-                               Rectangular="true"
-                               Variant="Variant.Text"
+                           Rectangular="true"
+                           Variant="Variant.Text"
                            Count="@(Convert.ToInt32(Math.Ceiling((double)PhotoPage.TotalResults / 80D)))"
-                               Style="align-self: center;"
-                               SelectedChanged="async (i) => await PageChange(i)" />
+                           Style="align-self: center;"
+                           SelectedChanged="async (i) => await PageChange(i)" />
             </MudPaper>
 
             @if (toggleFilter)
@@ -177,16 +189,8 @@
                  PanelClass="py-6"
                  Color="Color.Surface">
 
-                <MudTabPanel Text="Tab One" Style="padding: 0;">
+                <MudTabPanel Text="Photos" Style="padding: 0;">
                     <MudPaper><MudSkeleton SkeletonType="SkeletonType.Rectangle" /></MudPaper>
-                </MudTabPanel>
-
-                <MudTabPanel Text="Tab Two">
-                    <MudText></MudText>
-                </MudTabPanel>
-
-                <MudTabPanel Text="Tab Three">
-                    <MudText>Content Three</MudText>
                 </MudTabPanel>
 
             </MudTabs>
@@ -216,13 +220,14 @@
     protected override async Task OnParametersSetAsync()
     {
         await LoadSearchedPhotos();
-        await localStorage.SetItemAsync("searchText", SearchText);
     }
 
     private async Task LoadSearchedPhotos()
     {
         PhotoPage = await PhotoService.SearchPhoto(SearchText, 1);
         if (PhotoPage.Photos != null) loadPhoto = false;
+        await localStorage.SetItemAsync("searchText", SearchText);
+
     }
 
     private async Task FilterPhotos(string type = "clear", string e = "")
@@ -245,14 +250,14 @@
                 filterForm.mudColor = new MudColor(e);
                 filterForm.color = HttpUtility.UrlEncode(filterForm.mudColor.Value.Substring(0, 7));
             }
-            
+
             PhotoPage = await PhotoService.SearchPhoto(SearchText, 1, 0, orientation, size, filterForm.color);
         }
     }
 
     private async Task PageChange(int index)
     {
-        PhotoPage = await PhotoService.SearchPhoto(SearchText, index, 0, orientation, size, filterForm.color);
+        PhotoPage = await PhotoService.SearchPhoto(SearchText, index, 80, orientation, size, filterForm.color);
     }
 
 

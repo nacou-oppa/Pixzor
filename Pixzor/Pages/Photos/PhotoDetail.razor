@@ -45,7 +45,7 @@
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.h3" GutterBottom="true"><MudSkeleton Width="600px" /></MudText>
                     <MudLink Target="_blank" Underline="Underline.None" Class="d-flex ml-3" Style="align-items: center; gap: 20px;">
-                            <MudSkeleton Height="40px" Width="40px" SkeletonType="SkeletonType.Circle" />
+                        <MudSkeleton Height="40px" Width="40px" SkeletonType="SkeletonType.Circle" />
                         <MudText Typo="Typo.h5" GutterBottom="true" Color="Color.Dark" Style="cursor: pointer;">Photographer: </MudText><MudSkeleton Width="200px" />
                     </MudLink>
                 </div>
@@ -55,7 +55,7 @@
             </MudCardHeader>
             <MudCardContent Class="pa-0">
                 <MudLink Target="_blank" Style="display: block; width: fit-content; margin: auto;">
-                    <MudSkeleton Height="800px" Style="width: 100vw; transform: none;"/>
+                    <MudSkeleton Height="800px" Style="width: 100vw; transform: none;" />
                 </MudLink>
             </MudCardContent>
             <MudCardActions Style="justify-content: end; box-shadow: rgba(0, 0, 0, 0.24) 0px -3px 8px -5px;">
@@ -69,7 +69,7 @@
     <MudContainer Class="d-flex justify-center" MaxWidth="MaxWidth.False" Style="padding: 0 40px;">
         @if (PhotoPage.TotalResults > 0)
         {
-        <PhotoGrid photoPage="PhotoPage" />
+            <PhotoGrid photoPage="PhotoPage" />
         }
         else
         {
