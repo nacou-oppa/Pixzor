@@ -1,0 +1,129 @@
+﻿<style>
+    .item-hidden {
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0.5s, opacity 0.5s linear;
+    }
+
+    .relative:hover .item-hidden {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    img {
+        transition: filter 0.5s linear;
+    }
+
+        img:hover {
+            filter: brightness(.7);
+        }
+</style>
+@if (Collection != null && !string.IsNullOrEmpty(Collection!.Id))
+{
+
+    <MudContainer Class="item-container d-flex" Style="height: 250px; box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;">
+        <MudLink Href="@($"/collection/{Collection.Id}")" Underline="Underline.None" Style="display: flex; flex-direction: column; width: 100%; background-color: #212738;">
+            @*<MudContainer Class="relative">*@
+            @*<MudGrid Spacing="0">
+        <MudItem sm="12">
+        @if (CollectionMedia.Media!.ElementAt(0).Type.Equals("Photo"))
+        {
+        <MudImage Src="@(CollectionMedia.Media!.ElementAt(0).Src!.Large2x)"
+        Alt="@(CollectionMedia.Media!.ElementAt(0).Alt)"
+        Fluid="true"
+        ObjectFit="ObjectFit.Contain"
+        Height="300"
+        Style="width: auto;" />
+        }
+        else
+        {
+        <MudImage Src="@(CollectionMedia.Media!.ElementAt(0).Image)"
+        Fluid="true"
+        ObjectFit="ObjectFit.Contain"
+        Height="300"
+        Style="width: auto;" />
+        }
+        </MudItem>
+        <MudItem sm="6">
+        @if (CollectionMedia.Media!.ElementAt(1).Type.Equals("Photo"))
+        {
+        <MudImage Src="@(CollectionMedia.Media!.ElementAt(1).Src!.Large2x)"
+        Alt="@(CollectionMedia.Media!.ElementAt(0).Alt)"
+        Fluid="true"
+        ObjectFit="ObjectFit.Contain"
+        Height="200"
+        Style="width: auto;" />
+        }
+        else
+        {
+        <MudImage Src="@(CollectionMedia.Media!.ElementAt(1).Image)"
+        Fluid="true"
+        ObjectFit="ObjectFit.Contain"
+        Height="200"
+        Style="width: auto;" />
+        }
+        </MudItem>
+        <MudItem sm="6">
+        @if (CollectionMedia.Media!.ElementAt(2).Type.Equals("Photo"))
+        {
+        <MudImage Src="@(CollectionMedia.Media!.ElementAt(2).Src!.Large2x)"
+        Alt="@(CollectionMedia.Media!.ElementAt(0).Alt)"
+        Fluid="true"
+        ObjectFit="ObjectFit.Contain"
+        Height="200"
+        Style="width: auto;" />
+        }
+        else
+        {
+        <MudImage Src="@(CollectionMedia.Media!.ElementAt(2).Image)"
+        Fluid="true"
+        ObjectFit="ObjectFit.Contain"
+        Height="200"
+        Style="width: auto;" />
+        }
+        </MudItem>
+        </MudGrid>*@
+
+            <MudCardHeader Class="px-5 pt-3 pb-0" Style="width: auto;">
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6" Style="color: white;"><b>Title: @Collection.Title</b></MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Surface" />
+                </CardHeaderActions>
+            </MudCardHeader>
+
+            <MudCardContent Class="" Style="height: 100px;">
+                <MudGrid>
+                    <MudItem sm="4">
+                        <MudText Style="color: white;">Media: @Collection.MediaCount</MudText>
+                    </MudItem>
+                    <MudItem sm="4">
+                        <MudText Style="color: white;">Photos: @Collection.PhotosCount</MudText>
+                        </MudItem>
+                    <MudItem sm="4">
+                        <MudText Style="color: white;">Videos: @Collection.VideosCount</MudText>
+                        </MudItem>
+                    <MudItem sm="12">
+                        <MudText Style="color: white;">Description: @(string.IsNullOrEmpty(Collection.Description) ? "No Description" : Collection.Description)</MudText>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+
+            <MudCardActions Class="mt-auto" Style="">
+                <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Surface" />
+                <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Surface" />
+            </MudCardActions>
+
+            @*</MudContainer>*@
+        </MudLink>
+    </MudContainer>
+
+}
+
+@code {
+    [Parameter]
+    public Collection? Collection { get; set; }
+
+
+}
