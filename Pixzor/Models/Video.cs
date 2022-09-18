@@ -9,7 +9,7 @@
         public int Width { get; set; }
 
         [JsonPropertyName("height")]
-        public int height { get; set; }
+        public int Height { get; set; }
 
         [JsonPropertyName("full_res")]
         public bool? FullRes { get; set; }
@@ -31,6 +31,7 @@
 
         [JsonPropertyName("video_files")]
         public List<VideoFile>? VideoFiles { get; set; }
+
         [JsonPropertyName("video_picture")]
         public List<VideoPicture>? VideoPictures { get; set; }
     }

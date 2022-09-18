@@ -1,7 +1,127 @@
-﻿@page "/video/{id}"
-<h3>VideoDetail</h3>
+﻿@page "/video/{id:int}"
+
+<style>
+    .mud-skeleton-text {
+        transform: none;
+    }
+
+    @@media (max-width: 768px) {
+        .card-header {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+
+</style>
+
+<PageTitle>Video</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.False">
+    @if (Video.Id != 0)
+    {
+        <MudContainer MaxWidth="MaxWidth.False">
+            <MudCardHeader Class="card-header px-10" Style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px -5px;">
+                <div class="d-flex flex-column">
+                    <MudText Typo="Typo.h3" GutterBottom="true"><b>Video Detail</b></MudText>
+                    <MudLink Href="@(Video.User!.Url)" Target="_blank" Underline="Underline.None" Class="d-flex ml-3" Style="align-items: baseline; gap: 20px;">
+                        <MudAvatar Style=@($"background-color: {String.Format("#{0:X6}", new Random((int)DateTime.Now.Ticks).Next(0x1000000))}; cursor: pointer;")>
+                            @Video.User!.Name[0]
+                        </MudAvatar>
+                        <MudText Typo="Typo.h5" GutterBottom="true" Color="Color.Dark" Style="cursor: pointer;">Photographer: @Video.User!.Name</MudText>
+                    </MudLink>
+                </div>
+                <MudLink Href="https://www.pexels.com" Target="_blank" Style="margin-left: auto;">
+                    <MudImage Src="https://images.pexels.com/lib/api/pexels.png" Style="height: 80px;" />
+                </MudLink>
+            </MudCardHeader>
+            <MudCardContent Class="pa-0">
+                <MudLink Href="@(Video.Url)" Target="_blank">
+                </MudLink>
+                <MudHidden Breakpoint="Breakpoint.Xs">
+                    <video controls poster="@Video.VideoPictures?.FirstOrDefault()!.Picture" style="display: block; margin: auto; width: 80%; height: auto;">
+                        <source src="@Video.VideoFiles?.Find(v => v.Width.Equals(1920))!.Link" type="@Video.VideoFiles?.Find(v => v.Width.Equals(1920))!.FileType" />
+                    </video>
+                </MudHidden>
+                <MudHidden Breakpoint="Breakpoint.SmAndUp">
+                    <video controls poster="@Video.VideoPictures?.FirstOrDefault()!.Picture" style="display: block; margin: auto; width: 100%; height: auto;">
+                        <source src="@Video.VideoFiles?.Find(v => v.Width.Equals(1920))!.Link" type="@Video.VideoFiles?.Find(v => v.Width.Equals(1920))!.FileType" />
+                    </video>
+                </MudHidden>
+
+            </MudCardContent>
+            <MudCardActions Style="justify-content: end; box-shadow: rgba(0, 0, 0, 0.24) 0px -3px 8px -5px;">
+                <MudToggleIconButton Size="Size.Large" Icon="@Icons.Filled.FavoriteBorder" Color="@Color.Primary" Title="Like"
+                                 ToggledSize="Size.Large" ToggledIcon="@Icons.Filled.Favorite" ToggledColor="@Color.Primary" ToggledTitle="UnLike" />
+                <MudIconButton Link="@(Video.Url)" Target="_blank" Size="Size.Large" Color="Color.Primary" Icon="@Icons.Filled.Download">Original</MudIconButton>
+            </MudCardActions>
+        </MudContainer>
+    }
+    else
+    {
+        <MudContainer MaxWidth="MaxWidth.False">
+            <MudCardHeader Class="px-10" Style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px -5px;">
+                <div class="d-flex flex-column">
+                    <MudText Typo="Typo.h3" GutterBottom="true"><MudSkeleton Width="600px" /></MudText>
+                    <MudLink Target="_blank" Underline="Underline.None" Class="d-flex ml-3" Style="align-items: center; gap: 20px;">
+                        <MudSkeleton Height="40px" Width="40px" SkeletonType="SkeletonType.Circle" />
+                        <MudText Typo="Typo.h5" GutterBottom="true" Color="Color.Dark" Style="cursor: pointer;">Videographer: </MudText><MudSkeleton Width="200px" />
+                    </MudLink>
+                </div>
+                <MudLink Href="https://www.pexels.com" Target="_blank" Style="margin-left: auto;">
+                    <MudImage Src="https://images.pexels.com/lib/api/pexels.png" Style="height: 80px;" />
+                </MudLink>
+            </MudCardHeader>
+            <MudCardContent Class="pa-0">
+                <MudLink Target="_blank" Style="display: block; width: fit-content; margin: auto;">
+                    <MudSkeleton Height="800px" Style="width: 100vw; transform: none;" />
+                </MudLink>
+            </MudCardContent>
+            <MudCardActions Style="justify-content: end; box-shadow: rgba(0, 0, 0, 0.24) 0px -3px 8px -5px;">
+                <MudToggleIconButton Size="Size.Large" Icon="@Icons.Filled.FavoriteBorder" Color="@Color.Primary" Title="Like"
+                                 ToggledSize="Size.Large" ToggledIcon="@Icons.Filled.Favorite" ToggledColor="@Color.Primary" ToggledTitle="UnLike" />
+                <MudIconButton Target="_blank" Size="Size.Large" Color="Color.Primary" Icon="@Icons.Filled.Download">Original</MudIconButton>
+            </MudCardActions>
+        </MudContainer>
+    }
+    <MudText Typo="Typo.h4" Style="margin-left: 20px; margin-bottom: 40px;">Related Videos</MudText>
+    <MudContainer Class="d-flex justify-center" MaxWidth="MaxWidth.False" Style="padding: 0 40px;">
+        @if (VideoPage.TotalResults > 0)
+        {
+            <VideoGrid videoPage="VideoPage" />
+        }
+        else
+        {
+
+        }
+    </MudContainer>
+</MudContainer>
 
 @code {
     [Parameter]
     public int Id { get; set; }
+
+    private Video Video = new();
+    private string searchText { get; set; } = string.Empty;
+    private VideoPage VideoPage = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadVideos();
+    }
+
+    private async Task LoadVideos()
+    {
+        Video = await VideoService.GetVideo(Id);
+        var localStorageSearch = await localStorage.ContainKeyAsync("searchText");
+        if (localStorageSearch)
+        {
+            searchText = await localStorage.GetItemAsync<string>("searchText");
+            VideoPage = await VideoService.SearchVideos(searchText);
+            return;
+        }
+        VideoPage = await VideoService.GetVideos(1, 80);
+        var result = VideoPage.Videos!.Find(p => p.Id == Id);
+        VideoPage.Videos.Remove(result!);
+    }
+
 }

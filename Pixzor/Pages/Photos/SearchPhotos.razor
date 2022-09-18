@@ -1,5 +1,17 @@
 ﻿@page "/photo/search/{SearchText}"
 
+<style>
+    .mud-tabs-panels {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    ul li button span {
+        color: black;
+    }
+</style>
+
 <PageTitle>Pixzor - Search</PageTitle>
 
 @if (PhotoPage.Photos != null && PhotoPage.Photos.Count > 0)
@@ -224,7 +236,7 @@
 
     private async Task LoadSearchedPhotos()
     {
-        PhotoPage = await PhotoService.SearchPhoto(SearchText, 1);
+        PhotoPage = await PhotoService.SearchPhoto(SearchText);
         if (PhotoPage.Photos != null) loadPhoto = false;
         await localStorage.SetItemAsync("searchText", SearchText);
 
@@ -239,7 +251,7 @@
             filterForm.mudColor = new("#E3655B");
             filterForm.color = string.Empty;
 
-            PhotoPage = await PhotoService.SearchPhoto(SearchText, 1, 0, orientation, size, filterForm.color);
+            PhotoPage = await PhotoService.SearchPhoto(SearchText, 1, 0, orientation, size);
         }
         else
         {
@@ -251,13 +263,13 @@
                 filterForm.color = HttpUtility.UrlEncode(filterForm.mudColor.Value.Substring(0, 7));
             }
 
-            PhotoPage = await PhotoService.SearchPhoto(SearchText, 1, 0, orientation, size, filterForm.color);
+            PhotoPage = await PhotoService.SearchPhoto(SearchText, 1, 0, orientation, size);
         }
     }
 
     private async Task PageChange(int index)
     {
-        PhotoPage = await PhotoService.SearchPhoto(SearchText, index, 80, orientation, size, filterForm.color);
+        PhotoPage = await PhotoService.SearchPhoto(SearchText, index, 80, orientation);
     }
 
 

@@ -4,6 +4,14 @@
     .mud-skeleton-text {
         transform: none;
     }
+
+
+    @@media (max-width: 768px) {
+        .card-header {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
 </style>
 
 <PageTitle>Photo</PageTitle>
@@ -12,7 +20,7 @@
     @if (Photo.Id != 0)
     {
         <MudContainer MaxWidth="MaxWidth.False">
-            <MudCardHeader Class="px-10" Style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px -5px;">
+            <MudCardHeader Class="card-header px-10" Style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px -5px;">
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.h3" GutterBottom="true"><b>@(string.IsNullOrEmpty(Photo.Alt) ? "This Photo Doesn't Have Title" : Photo.Alt)</b></MudText>
                     <MudLink Href="@Photo.PhotographerUrl" Target="_blank" Underline="Underline.None" Class="d-flex ml-3" Style="align-items: baseline; gap: 20px;">

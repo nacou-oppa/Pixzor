@@ -1,5 +1,17 @@
 ﻿@page "/video/search/{SearchText}"
 
+<style>
+    .mud-tabs-panels {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    ul li button span {
+        color: black;
+    }
+</style>
+
 <PageTitle>Pixzor - Search</PageTitle>
 
 @if (VideoPage.Videos != null && VideoPage.Videos.Count > 0)
@@ -60,7 +72,7 @@
 
                             <MudItem md="4">
 
-                                <MudColorPicker Value="@filterForm.mudColor"
+                                @*<MudColorPicker Value="@filterForm.mudColor"
                                 ValueChanged="@((e) => FilterVideos("color", e.Value))"
                                 Label="Color"
                                 Palette="CustomPalette"
@@ -70,7 +82,7 @@
                                 DisableModeSwitch="true"
                                 AnchorOrigin="Origin.BottomCenter"
                                 AdornmentColor="Color.Primary"
-                                For="@(() => filterForm.mudColor)" />
+                                For="@(() => filterForm.mudColor)" />*@
 
                             </MudItem>
 
@@ -84,7 +96,7 @@
                  PanelClass="py-6"
                  Color="Color.Surface">
 
-                    <MudTabPanel Text="Photos" Style="padding: 0;">
+                    <MudTabPanel Text="Videos" Style="padding: 0;">
                         <MudPagination Color="Color.Primary"
                                Rectangular="true"
                                Variant="Variant.Text"
@@ -92,7 +104,7 @@
                                Style="align-self: center;"
                                SelectedChanged="async (i) => await PageChange(i)" />
 
-                        <PhotoGrid VideoPage="@VideoPage" searchText="@SearchText" />
+                        <VideoGrid VideoPage="@VideoPage" searchText="@SearchText" />
 
                         <MudPagination Color="Color.Primary"
                                Rectangular="true"

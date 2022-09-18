@@ -38,12 +38,12 @@ namespace Pixzor.Services
 
         public async Task<VideoPage> SearchVideos(string query, int page = 1, int perPage = 80, string orientation = "", string size = "", string local = "")
         {
-            string requestUri = $"videos/search?query={query}&page={page}";
+            string requestUri = $"search?query={query}&page={page}";
 
             if (perPage != 0) requestUri += $"&per_page={perPage}";
-            if (!string.IsNullOrWhiteSpace(orientation)) requestUri += $"&orientation={orientation}";
-            if (!string.IsNullOrWhiteSpace(size)) requestUri += $"&size={size}";
-            if (!string.IsNullOrWhiteSpace(local)) requestUri += $"&local={local}";
+            if (!string.IsNullOrEmpty(orientation)) requestUri += $"&orientation={orientation}";
+            if (!string.IsNullOrEmpty(size)) requestUri += $"&size={size}";
+            if (!string.IsNullOrEmpty(local)) requestUri += $"&local={local}";
 
             var result = await _httpClient.GetFromJsonAsync<VideoPage>(requestUri);
             return result ?? new VideoPage();

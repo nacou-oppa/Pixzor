@@ -5,6 +5,7 @@
         margin: 0;
         padding: 0;
     }
+
     .mud-drawer .mud-drawer-content {
         align-items: center;
     }
@@ -16,20 +17,20 @@
 
 <MudLayout Class="d-flex flex-column">
     <MudAppBar Elevation="1" Style="justify-content: center;">
-        
+
         <!-- Hidden on Xs-->
         <MudHidden Breakpoint="Breakpoint.Xs">
-            <MudIconButton Icon="@Icons.Material.Filled.Menu" 
-                           Color="Color.Primary" Edge="Edge.Start" 
+            <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                           Color="Color.Primary" Edge="Edge.Start"
                            OnClick="@((e) => DrawerToggle(Anchor.Left))" />
             <MudLink Class="mr-5" Href="/" Typo="Typo.h5" Color="Color.Primary" Underline="Underline.None"><b>Pixzor</b></MudLink>
-            @if(!isHomePage)
+            @if (!isHomePage)
             {
                 <SearchBar />
             }
             <MudSpacer />
             <MudIconButton Icon="@Icons.Custom.Brands.GitHub"
-                           Link="https://github.com/anhnq-git/Pixzor" 
+                           Link="https://github.com/anhnq-git/Pixzor"
                            Color="Color.Primary"
                            Target="_blank" />
         </MudHidden>
@@ -37,12 +38,15 @@
         <!-- Hidden on Sm and up-->
         <MudHidden Breakpoint="Breakpoint.SmAndUp">
             <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Primary" Edge="Edge.Start" OnClick="@((e) => DrawerToggle(Anchor.Top))" />
-            <MudText Class="mx-auto" Typo="Typo.h5" Color="Color.Primary"><b>Pixzor</b></MudText>
+            @if (!isHomePage)
+            {
+                <SearchBar />
+            }
             <MudIconButton Disabled="true" Icon="" Color="Color.Default" Edge="Edge.Start" OnClick="@((e) => DrawerToggle(Anchor.Top))" Style="width: 48px;" />
         </MudHidden>
 
     </MudAppBar>
-    
+
     <!-- Hidden on Xs-->
     <MudHidden Breakpoint="Breakpoint.Xs">
         <MudDrawer @bind-Open="_drawer" Anchor="drawerAnchor" ClipMode="DrawerClipMode.Always" Variant="DrawerVariant.Persistent" Elevation="1" Width="200px">
@@ -96,7 +100,7 @@
             {
                 AppbarHeight = "80px"
             }
-    };
+        };
 
     protected override void OnParametersSet()
     {
