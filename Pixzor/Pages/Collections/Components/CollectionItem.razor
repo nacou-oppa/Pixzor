@@ -23,66 +23,6 @@
 
     <MudContainer Class="item-container d-flex" Style="height: 250px; box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;">
         <MudLink Href="@($"/collection/{Collection.Id}")" Underline="Underline.None" Style="display: flex; flex-direction: column; width: 100%; background-color: #212738;">
-            @*<MudContainer Class="relative">*@
-            @*<MudGrid Spacing="0">
-        <MudItem sm="12">
-        @if (CollectionMedia.Media!.ElementAt(0).Type.Equals("Photo"))
-        {
-        <MudImage Src="@(CollectionMedia.Media!.ElementAt(0).Src!.Large2x)"
-        Alt="@(CollectionMedia.Media!.ElementAt(0).Alt)"
-        Fluid="true"
-        ObjectFit="ObjectFit.Contain"
-        Height="300"
-        Style="width: auto;" />
-        }
-        else
-        {
-        <MudImage Src="@(CollectionMedia.Media!.ElementAt(0).Image)"
-        Fluid="true"
-        ObjectFit="ObjectFit.Contain"
-        Height="300"
-        Style="width: auto;" />
-        }
-        </MudItem>
-        <MudItem sm="6">
-        @if (CollectionMedia.Media!.ElementAt(1).Type.Equals("Photo"))
-        {
-        <MudImage Src="@(CollectionMedia.Media!.ElementAt(1).Src!.Large2x)"
-        Alt="@(CollectionMedia.Media!.ElementAt(0).Alt)"
-        Fluid="true"
-        ObjectFit="ObjectFit.Contain"
-        Height="200"
-        Style="width: auto;" />
-        }
-        else
-        {
-        <MudImage Src="@(CollectionMedia.Media!.ElementAt(1).Image)"
-        Fluid="true"
-        ObjectFit="ObjectFit.Contain"
-        Height="200"
-        Style="width: auto;" />
-        }
-        </MudItem>
-        <MudItem sm="6">
-        @if (CollectionMedia.Media!.ElementAt(2).Type.Equals("Photo"))
-        {
-        <MudImage Src="@(CollectionMedia.Media!.ElementAt(2).Src!.Large2x)"
-        Alt="@(CollectionMedia.Media!.ElementAt(0).Alt)"
-        Fluid="true"
-        ObjectFit="ObjectFit.Contain"
-        Height="200"
-        Style="width: auto;" />
-        }
-        else
-        {
-        <MudImage Src="@(CollectionMedia.Media!.ElementAt(2).Image)"
-        Fluid="true"
-        ObjectFit="ObjectFit.Contain"
-        Height="200"
-        Style="width: auto;" />
-        }
-        </MudItem>
-        </MudGrid>*@
 
             <MudCardHeader Class="px-5 pt-3 pb-0" Style="width: auto;">
                 <CardHeaderContent>

@@ -1,7 +1,147 @@
 ﻿@page "/collection/{id}"
-<h3>CollectionDetail</h3>
+
+<style>
+    .mud-skeleton-text {
+        transform: none;
+    }
+
+
+    @@media (max-width: 768px) {
+        .card-header {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+
+<PageTitle>Collection</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.False">
+    @if (!string.IsNullOrEmpty(collectionMedia.Id))
+    {
+        <MudContainer MaxWidth="MaxWidth.False">
+            <MudCardHeader Class="card-header px-10">
+                <div class="d-flex flex-column">
+                    <MudLink Href="@(collectionMedia.Url)"
+                         Target="_blank" Underline="Underline.None">
+
+                        <MudText Typo="Typo.h3" GutterBottom="true">
+                            <b>@(string.IsNullOrEmpty(collection.Title) ? "This Collection Doesn't Have Title" : collection.Title)</b>
+                        </MudText>
+                        <MudElement Class="d-flex ml-3" Style="align-items: baseline; gap: 20px;">
+                            <MudText Typo="Typo.h5"
+                                 GutterBottom="true"
+                                 Color="Color.Dark"
+                                 Style="cursor: pointer;">
+                                @(string.IsNullOrEmpty(@collection.Description) ? "" : $"Description: {collection.Description}")
+                            </MudText>
+                        </MudElement>
+                    </MudLink>
+                </div>
+                <MudLink Href="https://www.pexels.com" Target="_blank" Style="margin-left: auto;">
+                    <MudImage Src="https://images.pexels.com/lib/api/pexels.png" Style="height: 80px;" />
+                </MudLink>
+            </MudCardHeader>
+            @*<MudCardContent Class="pa-0">
+        <MudLink Href="@(Collection.Url)" Target="_blank" Style="display: block; width: fit-content; margin: auto;">
+        <MudImage Src="@Collection.Src!.Large2x" Alt="@Collection.Alt" Style=" height: 800px;" />
+        </MudLink>
+        </MudCardContent>*@
+            <MudCardActions Style="justify-content: end;">
+                <MudToggleIconButton Size="Size.Large"
+                                 Icon="@Icons.Filled.FavoriteBorder"
+                                 Color="@Color.Primary"
+                                 Title="Like"
+                                 ToggledSize="Size.Large"
+                                 ToggledIcon="@Icons.Filled.Favorite"
+                                 ToggledColor="@Color.Primary"
+                                 ToggledTitle="UnLike" />
+                <MudIconButton Link="@(collectionPage.Url)"
+                           Target="_blank" Size="Size.Large"
+                           Color="Color.Primary"
+                           Icon="@Icons.Filled.Download">
+                    Original
+                </MudIconButton>
+            </MudCardActions>
+        </MudContainer>
+    }
+    else
+    {
+        <MudContainer MaxWidth="MaxWidth.False">
+            <MudCardHeader Class="px-10">
+                <div class="d-flex flex-column">
+                    <MudText Typo="Typo.h3" GutterBottom="true"><MudSkeleton Width="600px" /></MudText>
+                    <MudLink Target="_blank" Underline="Underline.None" Class="d-flex ml-3" Style="align-items: center; gap: 20px;">
+                        <MudSkeleton Height="40px" Width="40px" SkeletonType="SkeletonType.Circle" />
+                        <MudText Typo="Typo.h5"
+                             GutterBottom="true" Color="Color.Dark"
+                             Style="cursor: pointer;">
+                            Collection:
+                        </MudText>
+                        <MudSkeleton Width="200px" />
+                    </MudLink>
+                </div>
+                <MudLink Href="https://www.pexels.com" Target="_blank" Style="margin-left: auto;">
+                    <MudImage Src="https://images.pexels.com/lib/api/pexels.png" Style="height: 80px;" />
+                </MudLink>
+            </MudCardHeader>
+            <MudCardContent Class="pa-0">
+                <MudLink Target="_blank" Style="display: block; width: fit-content; margin: auto;">
+                    <MudSkeleton Height="800px" Style="width: 100vw; transform: none;" />
+                </MudLink>
+            </MudCardContent>
+            <MudCardActions Style="justify-content: end; box-shadow: rgba(0, 0, 0, 0.24) 0px -3px 8px -5px;">
+                <MudToggleIconButton Size="Size.Large" Icon="@Icons.Filled.FavoriteBorder" Color="@Color.Primary" Title="Like"
+                                 ToggledSize="Size.Large" ToggledIcon="@Icons.Filled.Favorite" ToggledColor="@Color.Primary" ToggledTitle="UnLike" />
+                <MudIconButton Target="_blank" Size="Size.Large" Color="Color.Primary" Icon="@Icons.Filled.Download">Original</MudIconButton>
+            </MudCardActions>
+        </MudContainer>
+    }
+    <MudText Typo="Typo.h4" Style="margin-left: 20px; margin-bottom: 40px;">Medias</MudText>
+    <MudContainer Class="d-flex justify-center" MaxWidth="MaxWidth.False" Style="padding: 0 40px;">
+        @if (collectionMedia.TotalResults > 0)
+        {
+            <CollectionMediaGrid CollectionMedia="collectionMedia" />
+        }
+        else
+        {
+
+        }
+    </MudContainer>
+
+    <MudText Typo="Typo.h4" Style="margin-left: 20px; margin-bottom: 40px;">Related Collections</MudText>
+    <MudContainer Class="d-flex justify-center" MaxWidth="MaxWidth.False" Style="padding: 0 40px;">
+        @if (collectionPage.TotalResults > 0)
+        {
+            <CollectionGrid collectionPage="collectionPage" />
+        }
+        else
+        {
+
+        }
+    </MudContainer>
+</MudContainer>
 
 @code {
     [Parameter]
     public string Id { get; set; } = string.Empty;
+
+    private CollectionMedia collectionMedia = new();
+    private Collection collection = new();
+    private CollectionPage collectionPage = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadCollections();
+    }
+
+    private async Task LoadCollections()
+    {
+        collectionMedia = await CollectionService.GetCollection(Id);
+
+        collectionPage = await CollectionService.GetCollections(1, 80);
+        collection = collectionPage.Collections.Find(p => p.Id == Id);
+        collectionPage.Collections.Remove(collection);
+    }
+
 }

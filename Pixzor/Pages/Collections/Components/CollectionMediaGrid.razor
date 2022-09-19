@@ -1,0 +1,83 @@
+﻿@if (CollectionMedia?.PerPage > 0)
+{
+    <MudGrid Class="d-flex flex-nowrap gap-4" Style="width: 100%">
+
+        <!-- Hidden at sm and down -->
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+            <MudItem Class="pa-0" md="4">
+                <MudStack Spacing="4">
+
+                    @*<Virtualize ItemsProvider="GetCuratedPhotos" Context="photo">*@
+                    @foreach (var media in CollectionMedia.Media!.Take(CollectionMedia.PerPage / 3))
+                    {
+                        <CollectionMediaItem Media="@media" />
+                    }
+                    @*</Virtualize>*@
+
+                    }
+                </MudStack>
+            </MudItem>
+            <MudItem Class="pa-0" md="4">
+                <MudStack Spacing="4">
+                    @foreach (var media in CollectionMedia.Media!.Skip(CollectionMedia.PerPage / 3)
+                   .Take((CollectionMedia.PerPage - CollectionMedia.PerPage / 3) / 2))
+                    {
+                        <CollectionMediaItem Media="@media" />
+                    }
+                </MudStack>
+            </MudItem>
+            <MudItem Class="pa-0" md="4">
+                <MudStack Spacing="4">
+                    @foreach (var media in CollectionMedia.Media!.TakeLast((CollectionMedia.PerPage - CollectionMedia.PerPage / 3) / 2))
+                    {
+                        <CollectionMediaItem Media="@media" />
+                    }
+                </MudStack>
+            </MudItem>
+        </MudHidden>
+
+        <!-- Hidden at md and up -->
+        <MudHidden Breakpoint="Breakpoint.Sm" Invert="true">
+            <MudItem Class="pa-0" sm="6">
+                <MudStack Spacing="4">
+                    @*<Virtualize ItemsProvider="GetCuratedPhotos" Context="photo">*@
+                    @foreach (var media in CollectionMedia.Media!.Take(CollectionMedia.PerPage / 2))
+                    {
+                        <CollectionMediaItem Media="@media" />
+                    }
+                    @*</Virtualize>*@
+                </MudStack>
+            </MudItem>
+            <MudItem Class="pa-0" sm="6">
+                <MudStack Spacing="4">
+                    @foreach (var media in CollectionMedia.Media!.Skip(CollectionMedia.PerPage / 2))
+                    {
+                        <CollectionMediaItem Media="@media" />
+                    }
+                </MudStack>
+            </MudItem>
+        </MudHidden>
+
+        <!-- Hidden at sm and up -->
+        <MudHidden Breakpoint="Breakpoint.SmAndUp">
+            <MudItem Class="pa-0" xs="12">
+                <MudStack Spacing="4">
+                    @*<Virtualize ItemsProvider="GetCuratedPhotos" Context="photo">*@
+                    @foreach (var media in CollectionMedia.Media!)
+                    {
+                        <CollectionMediaItem Media="@media" />
+                    }
+                    @*</Virtualize>*@
+                </MudStack>
+            </MudItem>
+        </MudHidden>
+
+    </MudGrid>
+}
+
+@code {
+    [Parameter]
+    public CollectionMedia? CollectionMedia { get; set; }
+    [Parameter]
+    public string searchText { get; set; } = string.Empty;
+}
