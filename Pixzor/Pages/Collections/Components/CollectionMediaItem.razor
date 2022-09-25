@@ -18,80 +18,85 @@
             filter: brightness(.7);
         }
 </style>
-
-@if (Media.Type.Equals("Photo"))
+@if (Media is not null)
 {
-    <MudContainer Class="item-container d-flex" Style="height: fit-content">
-        <MudLink Href="@($"/photo/{Media?.Id}")" Style="width: 100%;">
-            <MudContainer Class="relative">
 
-                <MudImage Src="@(Media?.Src?.Original)"
+    @if (Media.Type.Equals("Photo"))
+    {
+        <MudContainer Class="item-container d-flex" Style="height: fit-content">
+            <MudLink Href="@($"/photo/{Media?.Id}")" Style="width: 100%;">
+                <MudContainer Class="relative">
+
+                    <MudImage Src="@(Media?.Src?.Original)"
                       Alt="@(Media?.Alt)"
                       Fluid="true"
                       ObjectFit="ObjectFit.Contain"
                       Style="width: 100%; height: auto;" />
 
-                <MudCardHeader Class="item-hidden absolute pa-2" Style="width: 100%; top: 0;">
-                    <CardHeaderAvatar>
-                        <MudAvatar Style="@($"background-color: {String.Format("#{0:X6}", new Random((int)DateTime.Now.Ticks).Next(0x1000000))};")">@Media?.Photographer[0]</MudAvatar>
-                    </CardHeaderAvatar>
-                    <CardHeaderContent>
-                        <MudText Typo="Typo.body1" Style="color: white;">@Media?.Photographer</MudText>
-                    </CardHeaderContent>
-                    <CardHeaderActions>
-                        <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Surface" />
-                    </CardHeaderActions>
-                </MudCardHeader>
+                    <MudCardHeader Class="item-hidden absolute pa-2" Style="width: 100%; top: 0;">
+                        <CardHeaderAvatar>
+                            <MudAvatar Style="@($"background-color: {String.Format("#{0:X6}", new Random((int)DateTime.Now.Ticks).Next(0x1000000))};")">@Media?.Photographer[0]</MudAvatar>
+                        </CardHeaderAvatar>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.body1" Style="color: white;">@Media?.Photographer</MudText>
+                        </CardHeaderContent>
+                        <CardHeaderActions>
+                            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Surface" />
+                        </CardHeaderActions>
+                    </MudCardHeader>
 
-                <MudCardContent Class="item-hidden absolute" Style="width: 70%; bottom: 0;">
-                    <MudText Typo="Typo.body2" Style="color: white;">@Media?.Alt</MudText>
-                </MudCardContent>
+                    <MudCardContent Class="item-hidden absolute" Style="width: 70%; bottom: 0;">
+                        <MudText Typo="Typo.body2" Style="color: white;">@Media?.Alt</MudText>
+                    </MudCardContent>
 
-                <MudCardActions Class="item-hidden absolute" Style="bottom: 0; right: 0;">
-                    <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Surface" />
-                    <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Surface" />
-                </MudCardActions>
+                    <MudCardActions Class="item-hidden absolute" Style="bottom: 0; right: 0;">
+                        <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Surface" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Surface" />
+                    </MudCardActions>
 
-            </MudContainer>
-        </MudLink>
-    </MudContainer>
-}
-else
-{
-    <MudContainer Class="item-container d-flex" Style="height: fit-content">
-        <MudLink Href="@($"/video/{Media?.Id}")" Style="width: 100%;">
-            <MudContainer Class="relative">
+                </MudContainer>
+            </MudLink>
+        </MudContainer>
+    }
+    else
+    {
+        <MudContainer Class="item-container d-flex" Style="height: fit-content">
+            <MudLink Href="@($"/video/{Media?.Id}")" Style="width: 100%;">
+                <MudContainer Class="relative">
 
-                <MudImage Src="@(Media!.Image)"
+                    <MudImage Src="@(Media!.Image)"
                       Fluid="true"
                       ObjectFit="ObjectFit.Contain"
                       Style="width: 100%; height: auto;" />
 
-                <MudCardHeader Class="item-hidden absolute pa-2" Style="width: 100%; top: 0;">
-                    <CardHeaderAvatar>
-                        <MudAvatar Style="@($"background-color: {String.Format("#{0:X6}", new Random((int)DateTime.Now.Ticks).Next(0x1000000))};")">@Media.User!.Name[0]</MudAvatar>
-                    </CardHeaderAvatar>
-                    <CardHeaderContent>
-                        <MudText Typo="Typo.body1" Style="color: white;">@Media.User!.Name</MudText>
-                    </CardHeaderContent>
-                    <CardHeaderActions>
-                        <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Surface" />
-                    </CardHeaderActions>
-                </MudCardHeader>
+                    <MudCardHeader Class="item-hidden absolute pa-2" Style="width: 100%; top: 0;">
+                        <CardHeaderAvatar>
+                            <MudAvatar Style="@($"background-color: {String.Format("#{0:X6}", new Random((int)DateTime.Now.Ticks).Next(0x1000000))};")">@Media.User!.Name[0]</MudAvatar>
+                        </CardHeaderAvatar>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.body1" Style="color: white;">@Media.User!.Name</MudText>
+                        </CardHeaderContent>
+                        <CardHeaderActions>
+                            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Surface" />
+                        </CardHeaderActions>
+                    </MudCardHeader>
 
-                @*<MudCardContent Class="item-hidden absolute" Style="width: 70%; bottom: 0;">
+                    @*<MudCardContent Class="item-hidden absolute" Style="width: 70%; bottom: 0;">
             <MudText Typo="Typo.body2" Style="color: white;">@Media?.Alt</MudText>
             </MudCardContent>*@
 
-                <MudCardActions Class="item-hidden absolute" Style="bottom: 0; right: 0;">
-                    <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Surface" />
-                    <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Surface" />
-                </MudCardActions>
+                    <MudCardActions Class="item-hidden absolute" Style="bottom: 0; right: 0;">
+                        <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Surface" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Surface" />
+                    </MudCardActions>
 
-            </MudContainer>
-        </MudLink>
-    </MudContainer>
+                </MudContainer>
+            </MudLink>
+        </MudContainer>
+    }
+
 }
+
 
 @code {
     [Parameter]

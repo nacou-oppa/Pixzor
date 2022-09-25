@@ -6,7 +6,7 @@
     }
 
 
-    @@media (max-width: 768px) {
+    @@media (max-width: 600px) {
         .card-header {
             flex-direction: column;
             text-align: center;
@@ -32,7 +32,7 @@
                         <MudText Typo="Typo.h5" GutterBottom="true" Color="Color.Dark" Style="cursor: pointer;">Photographer: @Photo.Photographer</MudText>
                     </MudLink>
                 </div>
-                <MudLink Href="https://www.pexels.com" Target="_blank" Style="margin-left: auto;">
+                <MudLink Class="pexel-link" Href="https://www.pexels.com" Target="_blank" Style="margin-left: auto;">
                     <MudImage Src="https://images.pexels.com/lib/api/pexels.png" Style="height: 80px;" />
                 </MudLink>
             </MudCardHeader>

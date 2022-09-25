@@ -1,6 +1,16 @@
-﻿<MudNavMenu>
-    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home" IconColor="Color.Primary">Home</MudNavLink>
-    <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add" IconColor="Color.Primary">Counter</MudNavLink>
-    <MudNavLink Href="fetchdata" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List" IconColor="Color.Primary">Fetch data</MudNavLink>
-    <MudNavLink Href="photos" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Home" IconColor="Color.Primary">Photos</MudNavLink>
-</MudNavMenu>
+﻿
+
+<MudHidden Breakpoint="Breakpoint.Xs">
+    <MudNavMenu>
+        <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home" IconColor="Color.Primary">Home</MudNavLink>
+        <MudNavLink Href="about" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add" IconColor="Color.Primary">About</MudNavLink>
+    </MudNavMenu>
+</MudHidden>
+
+<MudHidden Breakpoint="Breakpoint.SmAndUp">
+    <MudNavMenu>
+        <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home" IconColor="Color.Primary">Home</MudNavLink>
+        <MudNavLink Href="about" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add" IconColor="Color.Primary">About</MudNavLink>
+        <MudLink Href="https://github.com/OmnipotentBug" Target="_blank">Github</MudLink>
+    </MudNavMenu>
+</MudHidden>

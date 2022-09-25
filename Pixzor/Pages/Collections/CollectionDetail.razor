@@ -6,10 +6,14 @@
     }
 
 
-    @@media (max-width: 768px) {
+    @@media (max-width: 600px) {
         .card-header {
             flex-direction: column;
             text-align: center;
+        }
+
+        .pexel-link {
+            margin: unset;
         }
     }
 </style>
@@ -38,7 +42,7 @@
                         </MudElement>
                     </MudLink>
                 </div>
-                <MudLink Href="https://www.pexels.com" Target="_blank" Style="margin-left: auto;">
+                <MudLink Class="pexel-link" Href="https://www.pexels.com" Target="_blank" Style="margin-left: auto;">
                     <MudImage Src="https://images.pexels.com/lib/api/pexels.png" Style="height: 80px;" />
                 </MudLink>
             </MudCardHeader>
@@ -109,7 +113,7 @@
         }
     </MudContainer>
 
-    <MudText Typo="Typo.h4" Style="margin-left: 20px; margin-bottom: 40px;">Related Collections</MudText>
+    <MudText Typo="Typo.h4" Style="margin-left: 20px; margin-bottom: 40px; margin-top: 40px;">Related Collections</MudText>
     <MudContainer Class="d-flex justify-center" MaxWidth="MaxWidth.False" Style="padding: 0 40px;">
         @if (collectionPage.TotalResults > 0)
         {
@@ -140,8 +144,8 @@
         collectionMedia = await CollectionService.GetCollection(Id);
 
         collectionPage = await CollectionService.GetCollections(1, 80);
-        collection = collectionPage.Collections.Find(p => p.Id == Id);
-        collectionPage.Collections.Remove(collection);
+        collection = collectionPage.Collections?.Find(p => p.Id == Id) ?? new();
+        collectionPage.Collections?.Remove(collection);
     }
 
 }
