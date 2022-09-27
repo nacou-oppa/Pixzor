@@ -3,7 +3,7 @@
 <style>
     form {
         display: flex;
-        width: 60%;
+        width: 100%;
     }
 
     .mud-shrink ~ label.mud-input-label.mud-input-label-inputcontrol {
@@ -30,13 +30,13 @@
     }
 
 </style>
+<MudStack Row="true" Spacing="3" Style="width: 100%;">
 
-<EditForm Model="search" OnValidSubmit="NavToSearch">
-    <MudStack Row="true" Style="width: 100%">
-        <MudSelect T="string" @bind-Value="searchType" Label="Select Search Type" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Filled" Style="background-color: white;">
-            <MudSelectItem Value=@("Photo") />
-            <MudSelectItem Value=@("Video") />
-        </MudSelect>
+    <MudSelect Class="mr-3" T="string" @bind-Value="searchType" Label="Select Search Type" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Filled" Style="background-color: white;">
+        <MudSelectItem Value=@("Photo") />
+        <MudSelectItem Value=@("Video") />
+    </MudSelect>
+    <EditForm Model="search" OnValidSubmit="NavToSearch">
         <MudAutocomplete Class="rounded"
                          T="string"
                          @bind-Value="@searchText"
@@ -230,8 +230,9 @@
                 </MudStack>
             </NoItemsTemplate>
         </MudAutocomplete>
-    </MudStack>
-</EditForm>
+    </EditForm>
+</MudStack>
+
 
 @code {
     //EditForm
@@ -259,9 +260,12 @@
     private async Task LoadSuggestion()
     {
         // Random words api form heroku
-        var words = await httpClient.GetFromJsonAsync<string[]>("https://random-word-api.herokuapp.com/all");
-        Array.Sort(words, (x, y) => x.Length - y.Length);
-        suggestion.AddRange(words!);
+        if (suggestion.Count == 0)
+        {
+            var words = await httpClient.GetFromJsonAsync<string[]>("https://random-word-api.herokuapp.com/all");
+            Array.Sort(words, (x, y) => x.Length - y.Length);
+            suggestion.AddRange(words!);
+        }
 
         var containRecent = await localStorage.ContainKeyAsync("recentSearch");
         if (containRecent) recent = await localStorage.GetItemAsync<List<string>>("recentSearch");
