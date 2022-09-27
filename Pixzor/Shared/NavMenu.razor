@@ -1,16 +1,20 @@
 ﻿
+<style>
+    @@media (max-width: 600px) {
+        .mud-nav-link {
+            justify-content: center;
+        }
 
-<MudHidden Breakpoint="Breakpoint.Xs">
-    <MudNavMenu>
-        <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home" IconColor="Color.Primary">Home</MudNavLink>
-        <MudNavLink Href="about" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add" IconColor="Color.Primary">About</MudNavLink>
-    </MudNavMenu>
-</MudHidden>
+            .mud-nav-link .mud-nav-link-text {
+                width: unset;
+            }
+    }
+</style>
 
-<MudHidden Breakpoint="Breakpoint.SmAndUp">
-    <MudNavMenu>
-        <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home" IconColor="Color.Primary">Home</MudNavLink>
-        <MudNavLink Href="about" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add" IconColor="Color.Primary">About</MudNavLink>
-        <MudLink Href="https://github.com/OmnipotentBug" Target="_blank">Github</MudLink>
-    </MudNavMenu>
-</MudHidden>
+<MudNavMenu Style="width: 100%;">
+    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home" IconColor="Color.Primary">Home</MudNavLink>
+    <MudNavLink Href="about" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.Info" IconColor="Color.Primary">About</MudNavLink>
+    <MudHidden Breakpoint="Breakpoint.SmAndUp">
+        <MudNavLink Icon="@Icons.Custom.Brands.GitHub" Href="https://github.com/OmnipotentBug" IconColor="Color.Primary" Target="_blank">Github</MudNavLink>
+    </MudHidden>
+</MudNavMenu>

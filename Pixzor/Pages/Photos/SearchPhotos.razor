@@ -6,10 +6,6 @@
         flex-direction: column;
         gap: 20px;
     }
-
-    ul li button span {
-        color: black;
-    }
 </style>
 
 <PageTitle>Pixzor - Search</PageTitle>
@@ -97,7 +93,8 @@
                  Color="Color.Surface">
 
                 <MudTabPanel Text="Photos" Style="padding: 0;">
-                    <MudPagination Color="Color.Primary"
+                    <MudPagination Class="justify-center"
+                        Color="Color.Primary"
                                Rectangular="true"
                                Variant="Variant.Text"
                                Count="@(Convert.ToInt32(Math.Ceiling((double)PhotoPage.TotalResults / 80D)))"
@@ -106,7 +103,7 @@
 
                     <PhotoGrid photoPage="@PhotoPage" searchText="@SearchText" />
 
-                    <MudPagination Color="Color.Primary"
+                    <MudPagination Class="justify-center" Color="Color.Primary"
                                Rectangular="true"
                                Variant="Variant.Text"
                                Count="@(Convert.ToInt32(Math.Ceiling((double)PhotoPage.TotalResults / 80D)))"

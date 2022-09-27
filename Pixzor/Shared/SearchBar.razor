@@ -6,6 +6,14 @@
         width: 60%;
     }
 
+    .mud-shrink ~ label.mud-input-label.mud-input-label-inputcontrol {
+        color: #000000;
+    }
+
+    .mud-input {
+        color: #000000;
+    }
+
     .mud-autocomplete {
         width: 100%;
     }
@@ -20,6 +28,7 @@
             width: 100%;
         }
     }
+
 </style>
 
 <EditForm Model="search" OnValidSubmit="NavToSearch">
@@ -42,7 +51,7 @@
                          Adornment="Adornment.End"
                          AdornmentIcon="@Icons.Filled.Search"
                          AdornmentColor="Color.Primary"
-                         Style="background-color: white;">
+                         Style="background: white;">
 
             <MoreItemsTemplate>
                 <MudStack Spacing="3">
@@ -296,7 +305,7 @@
         if (!recent.Contains(text)) recent.Add(text);
         await localStorage.SetItemAsync("recentSearch", recent);
         await localStorage.SetItemAsync("searchText", text);
-        
+
         if (searchType.Equals("Photo")) NavigationManager.NavigateTo($"photo/search/{text}");
         else NavigationManager.NavigateTo($"video/search/{text}");
     }

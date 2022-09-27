@@ -29,6 +29,8 @@
                 <SearchBar />
             }
             <MudSpacer />
+            <MudToggleIconButton @bind-Toggled="_isDarkMode" Icon="@Icons.Filled.LightMode" Color="Color.Dark" Title="Light Mode"
+                                 ToggledIcon="@Icons.Filled.DarkMode" ToggledColor="Color.Surface" ToggledTitle="Dark Mode" />
             <MudIconButton Icon="@Icons.Custom.Brands.GitHub"
                            Link="https://github.com/OmnipotentBug"
                            Color="Color.Primary"
@@ -42,7 +44,8 @@
             {
                 <SearchBar />
             }
-            <MudIconButton Disabled="true" Icon="" Color="Color.Default" Edge="Edge.Start" OnClick="@((e) => DrawerToggle(Anchor.Top))" Style="width: 48px;" />
+            <MudToggleIconButton Class="ml-auto" @bind-Toggled="_isDarkMode" Icon="@Icons.Filled.LightMode" Color="Color.Dark" Title="Light Mode"
+                                 ToggledIcon="@Icons.Filled.DarkMode" ToggledColor="Color.Surface" ToggledTitle="Dark Mode" />
         </MudHidden>
 
     </MudAppBar>
@@ -58,7 +61,7 @@
     <MudHidden Breakpoint="Breakpoint.SmAndUp">
         <MudDrawer @bind-Open="_drawer" Anchor="drawerAnchor" ClipMode="DrawerClipMode.Never" Variant="DrawerVariant.Temporary" Elevation="1">
             <MudDrawerHeader>
-                <MudText Typo="Typo.h5" Color="Color.Primary">Pixzor</MudText>
+                <MudText Typo="Typo.h5" Color="Color.Primary" Style="align-self: center;"><b>Pixzor</b></MudText>
             </MudDrawerHeader>
             <NavMenu />
         </MudDrawer>
@@ -82,19 +85,35 @@
         {
             Palette = new()
             {
-                Primary = "#E3655B",
-                PrimaryLighten = "#E27C78",
-                PrimaryDarken = "#CE5C53",
-                Secondary = "#858AE3",
-                Tertiary = "#684551",
-                Black = "#2A2D43",
-                White = "#FBF9FF",
-                Surface = "#FBF9FF",
+                Primary = "#0077B8",
+                PrimaryLighten = "#0AA9FF",
+                PrimaryDarken = "#005D8F",
+                Secondary = "#F0EBD8",
+                Tertiary = "#805E73",
+                Black = "#000",
+                White = "#fff",
+                Surface = "#fff",
                 Background = "#FBF9FF",
                 DrawerBackground = "#FBF9FF",
                 AppbarBackground = "#FBF9FF",
-                ActionDefault = "#fff",
+                ActionDefault = "#000",
                 TextPrimary = "#2A2D43"
+            },
+            PaletteDark = new()
+            {
+                Primary = "#0AA9FF",
+                PrimaryLighten = "#47BFFF",
+                PrimaryDarken = "#0077B8",
+                Secondary = "#F0EBD8",
+                Tertiary = "#805E73",
+                Black = "#fff",
+                White = "#000",
+                Surface = "#000",
+                Background = "#001524",
+                DrawerBackground = "#001524",
+                AppbarBackground = "#001524",
+                ActionDefault = "#C6CBD2",
+                TextPrimary = "#F9F7F0"
             },
             LayoutProperties = new()
             {
