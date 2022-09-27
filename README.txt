@@ -1,5 +1,5 @@
 - Nguyen Quoc Anh - 31191023058
-- UEH ST001 K45
+- UEH K45 ST001
 
 About Project
 - This is a Search Photos Project
