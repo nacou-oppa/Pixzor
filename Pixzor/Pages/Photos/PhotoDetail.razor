@@ -111,7 +111,7 @@
             PhotoPage = await PhotoService.SearchPhoto(searchText);
             return;
         }
-        PhotoPage = await PhotoService.GetPhotos(1, 80);
+        PhotoPage = await PhotoService.GetPhotos(1);
         var result = PhotoPage.Photos.Find(p => p.Id == Id);
         PhotoPage.Photos.Remove(result);
     }

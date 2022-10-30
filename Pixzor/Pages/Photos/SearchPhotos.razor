@@ -260,7 +260,7 @@
                 filterForm.color = HttpUtility.UrlEncode(filterForm.mudColor.Value.Substring(0, 7));
             }
 
-            PhotoPage = await PhotoService.SearchPhoto(SearchText, 1, 0, orientation, size);
+            PhotoPage = await PhotoService.SearchPhoto(SearchText, 1, 0, orientation, size, filterForm.color);
         }
     }
 
@@ -285,7 +285,7 @@
     // Search validate model
     public class FilterForm
     {
-        public string color { get; set; } = "";
+        public string color { get; set; } = string.Empty;
 
         public MudColor mudColor { get; set; } = new("#E3655B");
     }

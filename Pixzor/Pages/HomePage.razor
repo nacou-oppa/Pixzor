@@ -51,7 +51,7 @@
                     Color="Color.Primary"
                                Rectangular="true"
                                Variant="Variant.Text"
-                               Count="@(Convert.ToInt32(Math.Ceiling((double)photoPage.TotalResults / 80D)))"
+                               Count="@(Convert.ToInt32(Math.Ceiling((double)photoPage.TotalResults / 40d)))"
                                Style="align-self: center;"
                                SelectedChanged="async (i) => await PageChange(i)"/>
 
@@ -61,7 +61,7 @@
                     Color="Color.Primary"
                                Rectangular="true"
                                Variant="Variant.Text"
-                               Count="@(Convert.ToInt32(Math.Ceiling((double)photoPage.TotalResults / 80D)))"
+                               Count="@(Convert.ToInt32(Math.Ceiling((double)photoPage.TotalResults / 40d)))"
                                Style="align-self: center;"
                                SelectedChanged="async (i) => await PageChange(i)" />
             </MudTabPanel>
@@ -70,7 +70,7 @@
                     Color="Color.Primary"
                                Rectangular="true"
                                Variant="Variant.Text"
-                               Count="@(Convert.ToInt32(Math.Ceiling((double)videoPage.TotalResults / 80D)))"
+                               Count="@(Convert.ToInt32(Math.Ceiling((double)videoPage.TotalResults / 40d)))"
                                Style="align-self: center;"
                                SelectedChanged="async (i) => await PageChange(i)" />
 
@@ -80,7 +80,7 @@
                     Color="Color.Primary"
                                Rectangular="true"
                                Variant="Variant.Text"
-                               Count="@(Convert.ToInt32(Math.Ceiling((double)videoPage.TotalResults / 80D)))"
+                               Count="@(Convert.ToInt32(Math.Ceiling((double)videoPage.TotalResults / 40d)))"
                                Style="align-self: center;"
                                SelectedChanged="async (i) => await PageChange(i)" />
             </MudTabPanel>
@@ -141,11 +141,11 @@
         switch (index)
         {
             case 0:
-                if(photoPage.TotalResults == 0) photoPage = await PhotoService.GetPhotos();
+                if (photoPage.TotalResults == 0) photoPage = await PhotoService.GetPhotos();
                 activePanelIndex = index;
                 break;
             case 1:
-                if(videoPage.TotalResults == 0) videoPage = await VideoService.GetVideos();
+                if (videoPage.TotalResults == 0) videoPage = await VideoService.GetVideos();
                 activePanelIndex = index;
                 break;
             case 2:
